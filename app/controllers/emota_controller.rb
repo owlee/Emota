@@ -7,9 +7,6 @@ class EmotaController < ApplicationController
       modified_file if !modified.empty?
       added_file if !added.empty?
       removed_file if !removed.empty?
-     # puts "modified absolute path: #{modified}"
-     # puts "added absolute path: #{added}"
-     # puts "removed absolute path: #{removed}"
     end
     listener.start # not blocking
   end
@@ -61,10 +58,12 @@ class EmotaController < ApplicationController
   private
     def modified_file
       puts 'you are in modified file'
+      redirect_to :back
     end
 
     def added_file
       puts 'you are in added file'
+      redirect_to :back
     end
 
     def removed_file
