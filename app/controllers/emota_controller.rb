@@ -4,9 +4,9 @@ class EmotaController < ApplicationController
   def index
     @emota = Emotum.all
     listener = Listen.to('bin_emota') do |modified, added, removed|
-      modified_file if modified
-      added_file if added
-      removed_file if removed
+      modified_file if !modified.empty?
+      added_file if !added.empty?
+      removed_file if !removed.empty?
      # puts "modified absolute path: #{modified}"
      # puts "added absolute path: #{added}"
      # puts "removed absolute path: #{removed}"
