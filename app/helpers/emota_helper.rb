@@ -1,0 +1,2 @@
+module EmotaHelper
+end

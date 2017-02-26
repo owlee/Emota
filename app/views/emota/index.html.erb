@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Emota</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @emota.each do |emotum| %>
+      <tr>
+        <td><%= link_to 'Show', emotum %></td>
+        <td><%= link_to 'Edit', edit_emotum_path(emotum) %></td>
+        <td><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Emotum', new_emotum_path %>
