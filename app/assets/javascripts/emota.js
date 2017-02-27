@@ -1,6 +1,6 @@
 $(document).ready(function(){
   var uID = Math.floor((Math.random()*100)+1)
-
+    alert("hello");
   var pusher = new Pusher(Rails.application.secrets.PUSHER_APP_KEY)
   var channel = pusher.subscribe('emotum_process_'+uID)
 

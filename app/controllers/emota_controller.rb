@@ -6,8 +6,9 @@ class EmotaController < ApplicationController
   end
 
   def createProgressBar
-    #pusher_channel = "signup_process_#{uid}"¬
-    #fake_background_job(name, pusher_channel
+#    uid = params[:uid]
+#    pusher_channel = "signup_process_#{uid}"
+#    progress_job Emotum.last, pusher_channel
   end
 
   def show
@@ -58,11 +59,11 @@ class EmotaController < ApplicationController
   private
 
   def progress_job(emotum, pusher_channel)
-    Pusher.trigger(pusher_channel, 'update', {message: "Received photo from the Raspberry Pi", progress: 10 }) if emotum.on_server
-    sleep(3)
-    Pusher.trigger(pusher_channel, 'update', {message: "Sent photo to Microsoft API", progress: 30 }) if emotum.sent_to_api
-    sleep(2)
-    Pusher.trigger(pusher_channel, 'update', {message: "Received score back from Microsft API", progress: 60 }) if emotum.received_from_api
+#    Pusher.trigger(pusher_channel, 'update', {message: "Received photo from the Raspberry Pi", progress: 10 })# if emotum.on_server
+#    sleep(3)
+#    Pusher.trigger(pusher_channel, 'update', {message: "Sent photo to Microsoft API", progress: 30 })# if emotum.sent_to_api
+#    sleep(2)
+#    Pusher.trigger(pusher_channel, 'update', {message: "Received score back from Microsft API", progress: 60 })# if emotum.received_from_api
   end
 
   def set_emotum

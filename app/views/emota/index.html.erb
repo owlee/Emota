@@ -1,11 +1,16 @@
-<%= javascript_include_tag "http://js.pusher.com/2.1/pusher.min.js" >
-<%= javascript_include_tag "emota" >
+<%= javascript_include_tag "http://js.pusher.com/2.1/pusher.min.js" %>
+<%= javascript_include_tag "emota" %>
 
 <p id="notice"><%= notice %></p>
 
-<div class="progress progress-striped active hide">
+<div class="progress progress-striped active">
+    <div class="progress-bar progress-bar-animated" id='realtime-progress-bar' role="progressbar"></div>
+</div>
+<!--
+<div class="progress progress-striped active">
       <div class="progress-bar progress-bar-info" id='realtime-progress-bar' role="progressbar"style="width: 0%"></div>
 </div>
+!-->
 <p class="messages"></p>
 
 <h1>Listing Emota</h1>
