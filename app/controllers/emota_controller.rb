@@ -9,14 +9,6 @@ class EmotaController < ApplicationController
         fileName ||= added.first
         fileName ||= modified.first
         @emotum = Emotum.first_or_create(emotum_params.merge on_server: true, name: fileName)
-        respond_to do |format|
-          if @emotum
-            format.html { redirect_to emota_url, notice: 'Emotum was successfully created.' }
-            return
-          end
-        end
-       # redirect_to new_emotum_path
-       # flash[:notice] = 'Emotum was successfully created.'
       else
         raise Exception # Something went wrong
       end
