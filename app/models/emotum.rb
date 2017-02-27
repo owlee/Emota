@@ -25,7 +25,7 @@ class Emotum < ActiveRecord::Base
   end
 
   def send_to_api
-    self.update sent_to_api: Time.now
+    self.update sent_api: Time.now
 
     puts '2: file is converted to binary and sent to API'
 
@@ -48,14 +48,13 @@ class Emotum < ActiveRecord::Base
 
     puts '3: score is received back from API'
 
-    self.update received_from_api: Time.now
+    self.update received_api: Time.now
 
     case response.code
     when "200"
       if response.body.empty?
-        puts 'no face detected'
+        puts 'NOTE: no face detected'
       else
-        puts 'Storing scores in DB'
         parse_score response.body
       end
     when "401"
