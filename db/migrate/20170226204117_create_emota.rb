@@ -1,11 +1,13 @@
 class CreateEmota < ActiveRecord::Migration
   def change
     create_table :emota do |t|
-      t.string :name
-      t.boolean :on_server
-      t.boolean :sent_to_api
-      t.boolean :received_from_api
-      t.boolean :stored_score
+      t.string :path
+      t.time :on_server
+      t.time :preprocess
+      t.time :sent_api
+      t.time :received_api
+      t.time :stored_score
+      t.text :description
 
       t.timestamps null: false
     end

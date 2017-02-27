@@ -14,13 +14,15 @@
 ActiveRecord::Schema.define(version: 20170226204117) do
 
   create_table "emota", force: :cascade do |t|
-    t.string   "name"
-    t.boolean  "on_server"
-    t.boolean  "sent_to_api"
-    t.boolean  "received_from_api"
-    t.boolean  "stored_score"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.string   "path"
+    t.datetime "on_server"
+    t.datetime "preprocess"
+    t.datetime "sent_api"
+    t.datetime "received_api"
+    t.datetime "stored_score"
+    t.text     "description"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
 end
