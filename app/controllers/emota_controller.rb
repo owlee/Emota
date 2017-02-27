@@ -3,17 +3,6 @@ class EmotaController < ApplicationController
 
   def index
     @emota = Emotum.all
-    listener = Listen.to('bin_emota') do |modified, added, removed|
-      if !modified.empty? || !added.empty?
-        self.response_body = nil
-        fileName ||= added.first
-        fileName ||= modified.first
-        @emotum = Emotum.first_or_create(emotum_params.merge on_server: true, name: fileName)
-      else
-        raise Exception # Something went wrong
-      end
-    end
-    listener.start # not blocking
   end
 
   def show
@@ -62,9 +51,6 @@ class EmotaController < ApplicationController
   end
 
   private
-  def process_image modified, added
-
-  end
 
   def set_emotum
     @emotum = Emotum.find(params[:id])

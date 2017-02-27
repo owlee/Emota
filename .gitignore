@@ -16,3 +16,9 @@
 !/log/.keep
 /tmp
 *.swp
+bin
+*.swl
+*.swm
+*.swn
+*.swi
+bin_emota/*
