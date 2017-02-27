@@ -4,14 +4,28 @@ class EmotaController < ApplicationController
   def index
     @emota = Emotum.all
     listener = Listen.to('bin_emota') do |modified, added, removed|
-      modified_file if !modified.empty?
-      added_file if !added.empty?
-      removed_file if !removed.empty?
+      if !modified.empty? || !added.empty?
+        self.response_body = nil
+        fileName ||= added.first
+        fileName ||= modified.first
+        @emotum = Emotum.first_or_create(emotum_params.merge on_server: true, name: fileName)
+        respond_to do |format|
+          if @emotum
+            format.html { redirect_to emota_url, notice: 'Emotum was successfully created.' }
+            return
+          end
+        end
+       # redirect_to new_emotum_path
+       # flash[:notice] = 'Emotum was successfully created.'
+      else
+        raise Exception # Something went wrong
+      end
     end
     listener.start # not blocking
   end
 
   def show
+    redirect_to emota_path
   end
 
   def new
@@ -26,7 +40,7 @@ class EmotaController < ApplicationController
 
     respond_to do |format|
       if @emotum.save
-        format.html { redirect_to @emotum, notice: 'Emotum was successfully created.' }
+        format.html { redirect_to emota_url, notice: 'Emotum was successfully created.' }
         format.json { render :show, status: :created, location: @emotum }
       else
         format.html { render :new }
@@ -56,25 +70,15 @@ class EmotaController < ApplicationController
   end
 
   private
-    def modified_file
-      puts 'you are in modified file'
-      redirect_to :back
-    end
+  def process_image modified, added
 
-    def added_file
-      puts 'you are in added file'
-      redirect_to :back
-    end
+  end
 
-    def removed_file
-      puts 'you are in removed file'
-    end
+  def set_emotum
+    @emotum = Emotum.find(params[:id])
+  end
 
-    def set_emotum
-      @emotum = Emotum.find(params[:id])
-    end
-
-    def emotum_params
-      params.fetch(:emotum, {})
-    end
+  def emotum_params
+    params.permit :name, :on_server, :sent_to_api, :received_from_api, :stored_score
+  end
 end
