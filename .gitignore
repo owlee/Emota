@@ -23,3 +23,4 @@ bin
 *.swi
 bin_emota/*
 config/secrets.yml
+Emota Image Set/*
