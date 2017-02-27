@@ -6,29 +6,29 @@
 <div class="progress progress-striped active">
     <div class="progress-bar progress-bar-animated" id='realtime-progress-bar' role="progressbar"></div>
 </div>
-!-->
 <p class="messages"></p>
-
-<h1>Listing Emota</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+!-->
+<div class="container-fluid">
+  <h1>Emota Objects, render time, and score</h1>
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>File Name</th>
+        <th>Arrival ~> API time (s)</th>
+        <th>API ~> Server time (s)</th>
+        <th>Server ~> Database time (s)</th>
+        <th>Tools</th>
+      </tr>
+    </thead>
     <% @emota.each do |emotum| %>
       <tr>
-        <td><%= link_to 'Show', emotum %></td>
-        <td><%= link_to 'Edit', edit_emotum_path(emotum) %></td>
-        <td><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= emotum.path[/\w\.\w+$/] %></td>
+        <td><%= emotum.server_to_api_time %></td>
+        <td><%= emotum.api_to_server_time %></td>
+        <td><%= emotum.server_to_db_time %></td>
+        <td><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Emotum', new_emotum_path %>
+  </table>
+</div>
+<%#= link_to 'New Emotum', new_emotum_path %>
