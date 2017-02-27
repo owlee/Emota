@@ -75,6 +75,28 @@ class Emotum < ActiveRecord::Base
     end
   end
 
+  # !!!!! must check those fields exists, no error check yet.
+
+  def server_to_api_time
+    # in secs
+    sent_api - on_server
+  end
+
+  def api_to_server_time
+    # in secs
+    received_api - sent_api
+  end
+
+  def server_to_db_time
+    # in secs
+    stored_score - received_api
+  end
+
+  def vm_time
+    # in secs
+    stored_score - sent_api
+  end
+
   private
 
   def parse_score json
