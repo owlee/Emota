@@ -14,7 +14,7 @@ class Emotum < ActiveRecord::Base
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
         puts "Create: #{emotum.path} at: #{emotum.on_server}"
-        puts 'Sending to API'
+        puts '1: file is on server'
         emotum.send_to_api
       else
         raise Exception # Something went wrong
@@ -26,6 +26,8 @@ class Emotum < ActiveRecord::Base
 
   def send_to_api
     self.update sent_to_api: Time.now
+
+    puts '2: file is converted to binary and sent to API'
 
     uri = URI('https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize')
     uri.query = URI.encode_www_form({
@@ -44,6 +46,8 @@ class Emotum < ActiveRecord::Base
       http.request(request)
     end
 
+    puts '3: score is received back from API'
+
     self.update received_from_api: Time.now
 
     case response.code
@@ -51,6 +55,7 @@ class Emotum < ActiveRecord::Base
       if response.body.empty?
         puts 'no face detected'
       else
+        puts 'Storing scores in DB'
         parse_score response.body
       end
     when "401"
@@ -81,6 +86,8 @@ class Emotum < ActiveRecord::Base
       emotion = Emotion.create sadness: sc["sadness"], neutral: sc["neutral"], contempt: sc["contempt"], disgust: sc["disgust"], anger: sc["anger"], surprise: sc["surprise"], fear: sc["fear"], happiness: sc["happiness"]
       self.update emotion_id: emotion.id
       self.update stored_score: Time.now
+
+      puts '4: scores are now stored in DB'
 
       #faceRectangle = "Face Rectangle:\n Width: #{r["width"]}, Height: #{r["height"]}, top: #{r["top"]}, left: #{r["left"]}\n"
       #send (faceRectangle + score)
