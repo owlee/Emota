@@ -11,18 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170226204117) do
+ActiveRecord::Schema.define(version: 20170227215717) do
 
   create_table "emota", force: :cascade do |t|
+    t.integer  "emotion_id"
     t.string   "path"
-    t.datetime "on_server"
-    t.datetime "preprocess"
-    t.datetime "sent_api"
-    t.datetime "received_api"
-    t.datetime "stored_score"
-    t.text     "description"
+    t.time     "on_server"
+    t.time     "preprocess"
+    t.time     "sent_api"
+    t.time     "received_api"
+    t.time     "stored_score"
+    t.text     "notes"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+  end
+
+  add_index "emota", ["emotion_id"], name: "index_emota_on_emotion_id"
+
+  create_table "emotions", force: :cascade do |t|
+    t.decimal  "surprise"
+    t.decimal  "anger"
+    t.decimal  "contempt"
+    t.decimal  "disgust"
+    t.decimal  "fear"
+    t.decimal  "happiness"
+    t.decimal  "neutral"
+    t.decimal  "sadness"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

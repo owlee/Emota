@@ -2,6 +2,8 @@ require 'listen'
 require 'net/http'
 
 class Emotum < ActiveRecord::Base
+  belongs_to :emotion
+
   def self.listen
     listener = Listen.to('bin_emota') do |modified, added, removed|
       #ignore those ^.jpg in the future
@@ -23,6 +25,8 @@ class Emotum < ActiveRecord::Base
   end
 
   def send_to_api
+    self.update sent_to_api: Time.now
+
     uri = URI('https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize')
     uri.query = URI.encode_www_form({
     })
@@ -40,7 +44,8 @@ class Emotum < ActiveRecord::Base
       http.request(request)
     end
 
-    binding.pry
+    self.update received_from_api: Time.now
+
     case response.code
     when "200"
       if response.body.empty?
@@ -69,14 +74,16 @@ class Emotum < ActiveRecord::Base
   private
 
   def parse_score json
-    binding.pry
     json = JSON.parse json
     begin
-      r = json[0]["faceRectangle"]
+      #r = json[0]["faceRectangle"]
       sc = json[0]["scores"]
-      faceRectangle = "Face Rectangle:\n Width: #{r["width"]}, Height: #{r["height"]}, top: #{r["top"]}, left: #{r["left"]}\n"
-      score = "Score: \n sadness: #{sc["sadness"]}, neutral: #{sc["neutral"]}, contempt: #{sc["contempt"]}, disgust: #{sc["disgust"]}, anger: #{sc["anger"]}, surprise: #{sc["surprise"]}, fear: #{sc["fear"]}, happiness: #{sc["happiness"]}"
-      send (faceRectangle + score)
+      emotion = Emotion.create sadness: sc["sadness"], neutral: sc["neutral"], contempt: sc["contempt"], disgust: sc["disgust"], anger: sc["anger"], surprise: sc["surprise"], fear: sc["fear"], happiness: sc["happiness"]
+      self.update emotion_id: emotion.id
+      self.update stored_score: Time.now
+
+      #faceRectangle = "Face Rectangle:\n Width: #{r["width"]}, Height: #{r["height"]}, top: #{r["top"]}, left: #{r["left"]}\n"
+      #send (faceRectangle + score)
     rescue EmptyJsonError
       $stderr.print "JSON response is empty: " + $!
       raise
