@@ -22,3 +22,4 @@ bin
 *.swn
 *.swi
 bin_emota/*
+config/secrets.yml
