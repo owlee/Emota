@@ -33,30 +33,30 @@
                 <td><%= emotum.server_to_db_time %></td>
                 <td><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
               </tr>
-            <tr>
-              <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
-                  <table class="table table-striped">
-                    <thead>
+              <tr>
+                <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
+                    <table class="table table-striped">
+                      <thead>
 
-                      <tr><th>anger</th><th>contempt</th><th>disgust</th><th>fear</th><th>happiness</th><th>neutral</th><th>sadness</th><th>surprise</th></tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><%= emotum.emotion.anger.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.contempt.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.disgust.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.fear.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.happiness.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.neutral.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.sadness.truncate(6).to_s('S') %></td>
-<td><%= emotum.emotion.surprise.truncate(6).to_s('S') %></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-          <% end %>
+                        <tr><th>anger</th><th>contempt</th><th>disgust</th><th>fear</th><th>happiness</th><th>neutral</th><th>sadness</th><th>surprise</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><%= emotum.emotion.anger.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.contempt.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.disgust.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.fear.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.happiness.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.neutral.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.sadness.truncate(6).to_s('S') %></td>
+                          <td><%= emotum.emotion.surprise.truncate(6).to_s('S') %></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
           </tbody>
         </table>
       </div>
