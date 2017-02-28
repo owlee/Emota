@@ -17,9 +17,9 @@
           <thead>
             <tr>
               <th class="col-md-2">File Name</th>
-              <th class="col-md-3">Arrival ~> API time (s)</th>
-              <th class="col-md-3">API ~> Server time (s)</th>
-              <th class="col-md-3">Server ~> Database time (s)</th>
+              <th class="col-md-3">Arrival ~> API time</th>
+              <th class="col-md-3">API ~> Server time</th>
+              <th class="col-md-3">Server ~> Database time</th>
               <th class="col-md-1">&nbsp;</th>
             </tr>
           </thead>
@@ -27,11 +27,11 @@
           <tbody>
             <% @emota.each do |emotum| %>
               <tr data-toggle="collapse" data-target="#emotions-<%= emotum.id %>" class="accordion-toggle">
-                <td><%= emotum.path[/\w\.\w+$/] %></td>
-                <td><%= emotum.server_to_api_time %></td>
-                <td><%= emotum.api_to_server_time %></td>
-                <td><%= emotum.server_to_db_time %></td>
-                <td><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td class="col-md-2"><%= emotum.path[/\w\.\w+$/] %></td>
+                <td class="col-md-3"><%= [emotum.server_to_api_time, 's'].join ' ' %></td>
+                <td class="col-md-3"><%= [emotum.api_to_server_time, 's'].join ' ' %></td>
+                <td class="col-md-3"><%= [emotum.server_to_db_time, 's'].join ' ' %></td>
+                <td class="col-md-1"><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
               </tr>
               <tr>
                 <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
@@ -42,14 +42,14 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td><%= emotum.emotion.anger.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.contempt.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.disgust.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.fear.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.happiness.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.neutral.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.sadness.truncate(6).to_s('S') %></td>
-                          <td><%= emotum.emotion.surprise.truncate(6).to_s('S') %></td>
+                          <td><%= [emotum.emotion.anger.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.contempt.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.disgust.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.fear.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.happiness.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.neutral.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.sadness.truncate(6).to_s('S'), 's'].join ' ' %></td>
+                          <td><%= [emotum.emotion.surprise.truncate(6).to_s('S'), 's'].join ' ' %></td>
                         </tr>
                       </tbody>
                     </table>
