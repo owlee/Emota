@@ -17,6 +17,9 @@ gem 'coffee-rails', '~> 4.1.0' # Use CoffeeScript for .coffee assets and views
 gem 'bootstrap-sass', '~> 3.3.6'
 gem "font-awesome-rails"
 
+# --- API ---
+gem 'aws-sdk'
+
 # --- Options for later ---
 # gem 'therubyracer', platforms: :ruby
 
