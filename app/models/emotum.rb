@@ -72,9 +72,10 @@ class Emotum < ActiveRecord::Base
 
   def parse_score json
     json = JSON.parse json
-    #r = json[0]["faceRectangle"]
-    sc = json[0]["scores"]
-    if !sc.empty?
+    if !json.empty?
+      #r = json[0]["faceRectangle"]
+      sc = json[0]["scores"]
+
       emotion = Emotion.create sadness: sc["sadness"], neutral: sc["neutral"], contempt: sc["contempt"], disgust: sc["disgust"], anger: sc["anger"], surprise: sc["surprise"], fear: sc["fear"], happiness: sc["happiness"]
     else
       # No data on image will produce 0 response
