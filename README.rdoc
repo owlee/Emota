@@ -9,8 +9,8 @@ Emota Rails features the following:
 * SNS client
 
 * Logging of all Emotum data
-*- The arrival times of different stages to the data
-** Image depiction (developing)
-** Emoji of the most dominant emotion (developing)
-** Rails page of all logged data
-** MORE TO BE ADDED
+- The arrival times of different stages to the data
+- Image depiction (developing)
+- Emoji of the most dominant emotion (developing)
+- Rails page of all logged data
+- MORE TO BE ADDED
