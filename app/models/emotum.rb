@@ -1,9 +1,16 @@
 require 'listen'
+#require 'open-uri'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }
 
-  attr_accessor :emotion_client, :sns_client
+  attr_accessor :emotion_client, :sns_client, :path
+
+ # before_validation :download_remote_image, :if => :has_image_url?
+  validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+  #validates_attachment :avatar, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
+ # validates_presence_of :avatar_remote_url, :if => :has_image_url?, :message => 'is invalid or inaccessible path'
 
   @@emotion_client = EmotionClient.new
   @@sns_client = SnsClient.new
@@ -15,7 +22,8 @@ class Emotum < ActiveRecord::Base
         fileName ||= added.first
         fileName ||= modified.first
 
-        emotum = Emotum.create(path: fileName, on_server: Time.now)
+        #TODO: with paperclip :path column is now redundant
+        emotum = Emotum.create(path: fileName, on_server: Time.now, avatar: File.new(fileName, "r"))
 
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
@@ -81,4 +89,22 @@ class Emotum < ActiveRecord::Base
     update emotion_id: emotion.id
     update stored_score: Time.now
   end
+
+  private
+
+ # def has_image_url?
+ #   !self.path.blank?
+ # end
+
+ # def download_remote_image
+ #   self.avatar = download_remote_image
+ #   self.avatar_remote_url = path
+ # end
+
+ # def download_remote_image
+ #   io = open(URI.parse(path))
+ #   def io.original_filename; base_uri.path.split('/').last; end
+ #   io.original_filename.blank? ? nil : io
+ # rescue # catch url errors with validations instead of exceptions (Errno::ENOENT, OpenURI::HTTPError, etc...)
+ # end
 end

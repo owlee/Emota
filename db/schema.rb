@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170227215717) do
+ActiveRecord::Schema.define(version: 20170301182837) do
 
   create_table "emota", force: :cascade do |t|
     t.integer  "emotion_id"
@@ -22,8 +22,12 @@ ActiveRecord::Schema.define(version: 20170227215717) do
     t.time     "received_api"
     t.time     "stored_score"
     t.text     "notes"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "emota", ["emotion_id"], name: "index_emota_on_emotion_id"

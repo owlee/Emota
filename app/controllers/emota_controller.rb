@@ -71,6 +71,6 @@ class EmotaController < ApplicationController
   end
 
   def emotum_params
-    params.permit :name, :on_server, :sent_to_api, :received_from_api, :stored_score
+    params.permit :name, :on_server, :sent_to_api, :received_from_api, :stored_score, :avatar
   end
 end

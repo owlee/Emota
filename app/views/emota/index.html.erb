@@ -10,7 +10,7 @@
   !-->
   <div class="container">
     <div class="panel panel-default">
-      <div class="panel-heading"><h2>Emota Objects, render time, and score</h2></div>
+      <div class="panel-heading"><h2>Emota Logger</h2></div>
       <div class="panel-body">
         <table class="table table-condensed" style="border-collapse:collapse;">
 
@@ -31,12 +31,12 @@
                 <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
-                <td class="col-md-4"><%=  %></td>
-                <td class="col-md-2"><%= emotum.path[/\w\.\w+$/] %></td>
+                <td class="col-md-4"><%= image_tag emotum.avatar.url(:medium) %></td>
+                <td class="col-md-2"><%= emotum.avatar_file_name %></td>
                 <td class="col-md-1"><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
               </tr>
               <tr>
-                <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
+                <td colspan="12" class="hiddenRow" style="background-color: Lavender;"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
                     <table class="table table-striped">
                       <thead>
 
@@ -59,15 +59,15 @@
                       <thead>
                         <tr>
                           <th class="col-md-1">File Name</th>
-                          <th class="col-md-2">Arrival ~> API time</th>
-                          <th class="col-md-2">API ~> Server time</th>
-                          <th class="col-md-2">Server ~> Database time</th>
-                          <th class="col-md-2">Server Received At</th>
-                          <th class="col-md-2">Server Sent to User At</th></tr>
+                          <th class="col-md-2">Arrival ~> API</th>
+                          <th class="col-md-2">API ~> Server</th>
+                          <th class="col-md-2">Server ~> Database</th>
+                          <th class="col-md-2">Received At</th>
+                          <th class="col-md-2">Sent to User At</th></tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td class="col-md-1"><%= emotum.path[/\w\.\w+$/] %></td>
+                          <td class="col-md-1"><%= emotum.avatar_file_name %></td>
                           <td class="col-md-2"><%= [emotum.server_to_api_time, 's'].join ' ' %></td>
                           <td class="col-md-2"><%= [emotum.api_to_server_time, 's'].join ' ' %></td>
                           <td class="col-md-2"><%= [emotum.server_to_db_time, 's'].join ' ' %></td>
