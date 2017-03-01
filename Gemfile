@@ -9,6 +9,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc # bundle exec rake doc:rails generates the API under doc/api.
+gem "paperclip", "~> 5.0.0"
 
 # --- Styling ---
 gem 'sass-rails', '~> 5.0'
