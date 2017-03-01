@@ -31,7 +31,7 @@ class Emotum < ActiveRecord::Base
 
         puts '4: scores are now stored in DB'
 
-        @@sns_client.send_score emotum
+        #@@sns_client.send_score emotum
 
         puts '5: scores sent to Emota User'
       else
@@ -42,25 +42,20 @@ class Emotum < ActiveRecord::Base
     sleep
   end
 
-  # !!!!! must check those fields exists, no error check yet.
   def server_to_api_time
-    # in secs
-    sent_api - on_server
+    ((!sent_api.nil?) && (!on_server.nil?)) ? (sent_api - on_server) : 0 # in secs
   end
 
   def api_to_server_time
-    # in secs
-    received_api - sent_api
+    ((!received_api.nil?) && (!sent_api.nil?)) ? (received_api - sent_api) : 0 # in secs
   end
 
   def server_to_db_time
-    # in secs
-    stored_score - received_api
+    ((!received_api.nil?) && (!stored_score.nil?)) ? (stored_score - received_api) : 0 # in secs
   end
 
   def vm_time
-    # in secs
-    stored_score - sent_api
+    ((!sent_api.nil?) && (!stored_score.nil?)) ? (stored_score - sent_api) : 0 # in secs
   end
 
   def send_to_api
@@ -79,7 +74,7 @@ class Emotum < ActiveRecord::Base
       emotion = Emotion.create sadness: sc["sadness"], neutral: sc["neutral"], contempt: sc["contempt"], disgust: sc["disgust"], anger: sc["anger"], surprise: sc["surprise"], fear: sc["fear"], happiness: sc["happiness"]
     else
       # No data on image will produce 0 response
-      emotion = Emotion.create sadness: 0, neutral: 0, contempt: 0, disgust: 0, anger: 0, surprise: 0, fear: 0, happiness: 0
+      emotion = Emotion.create
     end
     emotion_id = emotion.id
 
