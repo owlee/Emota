@@ -1,28 +1,16 @@
-== README
+== Emota Project
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, sends info to Microsoft Emotion recognition API, receives emotion scores back, and delivers to individuals via SMS.
 
-Things you may want to cover:
+Emota Rails features the following:
 
-* Ruby version
+* Emotion API client
 
-* System dependencies
+* SNS client
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* Logging of all Emotum data
+** The arrival times of different stages to the data
+** Image depiction (developing)
+** Emoji of the most dominant emotion (developing)
+** Rails page of all logged data
+** MORE TO BE ADDED
