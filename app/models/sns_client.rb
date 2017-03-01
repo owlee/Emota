@@ -1,12 +1,10 @@
-#require 'yaml'
-#
-# --- USAGE --
-  # sns.operation_names
-  #c = SnsClient.new
-  #c.send
 class SnsClient
   attr_accessor :sns, :json, :subscriber_file
 
+  # --- USAGE --
+  # sns.operation_names
+  #c = SnsClient.new
+  #c.send
   def initialize params = {}
     @subscriber_file = YAML.load_file("#{Rails.application.root}/db/subscribers.yml")
 

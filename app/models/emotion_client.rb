@@ -1,9 +1,11 @@
+require 'net/http'
+
 class EmotionClient
   attr_accessor :request, :uri
 
   def initialize params = {}
-    uri = URI('https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize')
-    uri.query = URI.encode_www_form({
+    @uri = URI('https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize')
+    @uri.query = URI.encode_www_form({
     })
     @request = Net::HTTP::Post.new(uri.request_uri)
     @request.content_type = 'application/octet-stream'
@@ -45,7 +47,7 @@ class EmotionClient
         # Worse case
         puts 'Errors outside of exceptions'
       end
-
+      response.body
     rescue Exception => e
       puts "Unrecognizable param binaryImage:#{binaryImage}. Please input a valid image binary."
       return nil

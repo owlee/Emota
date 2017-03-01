@@ -1,15 +1,14 @@
 require 'listen'
-require 'net/http'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
 
   attr_accessor :emotion_client, :sns_client
 
-  def self.listen
-    @emotion_client = EmotionClient.new
-    @sns_client = SnsClient.new
+  @@emotion_client = EmotionClient.new
+  @@sns_client = SnsClient.new
 
+  def self.listen
     listener = Listen.to('bin_emota') do |modified, added, removed|
       #ignore those ^.jpg in the future
       if !modified.empty? || !added.empty?
@@ -28,11 +27,11 @@ class Emotum < ActiveRecord::Base
 
         puts '3: score is received back from API'
 
-        parse_score json
+        emotum.parse_score json
 
         puts '4: scores are now stored in DB'
 
-        @sns_client.send_score emotum
+        @@sns_client.send_score emotum
 
         puts '5: scores sent to Emota User'
       else
@@ -64,11 +63,11 @@ class Emotum < ActiveRecord::Base
     stored_score - sent_api
   end
 
-  private
   def send_to_api
     self.update sent_api: Time.now
-    @emotion_client.call File.read path
+    json = @@emotion_client.call(File.read self.path)
     self.update received_api: Time.now
+    json
   end
 
   def parse_score json
@@ -81,8 +80,9 @@ class Emotum < ActiveRecord::Base
       # No data on image will produce 0 response
       emotion = Emotion.create sadness: 0, neutral: 0, contempt: 0, disgust: 0, anger: 0, surprise: 0, fear: 0, happiness: 0
     end
+    emotion_id = emotion.id
 
-    self.update emotion_id: emotion.id
-    self.update stored_score: Time.now
+    update emotion_id: emotion.id
+    update stored_score: Time.now
   end
 end
