@@ -4,18 +4,37 @@ require 'net/http'
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
 
+  attr_accessor :emotion_client, :sns_client
+
   def self.listen
+    @emotion_client = EmotionClient.new
+    @sns_client = SnsClient.new
+
     listener = Listen.to('bin_emota') do |modified, added, removed|
       #ignore those ^.jpg in the future
       if !modified.empty? || !added.empty?
         fileName ||= added.first
         fileName ||= modified.first
+
         emotum = Emotum.create(path: fileName, on_server: Time.now)
+
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
         puts "Create: #{emotum.path} at: #{emotum.on_server}"
         puts '1: file is on server'
-        emotum.send_to_api
+        puts '2: file is sent to API'
+
+        json = emotum.send_to_api
+
+        puts '3: score is received back from API'
+
+        parse_score json
+
+        puts '4: scores are now stored in DB'
+
+        @sns_client.send_score emotum
+
+        puts '5: scores sent to Emota User'
       else
         raise Exception # Something went wrong
       end
@@ -24,59 +43,7 @@ class Emotum < ActiveRecord::Base
     sleep
   end
 
-  def send_to_api
-    self.update sent_api: Time.now
-
-    puts '2: file is converted to binary and sent to API'
-
-    uri = URI('https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize')
-    uri.query = URI.encode_www_form({
-    })
-
-    binary = File.read path
-
-    request = Net::HTTP::Post.new(uri.request_uri)
-    request.content_type = 'application/octet-stream'
-    #request['Content-Type'] = 'application/json'
-
-    request['Ocp-Apim-Subscription-Key'] = Rails.application.secrets.MICROSOFT_EMOTION_API_KEY
-    request.body = binary
-
-    response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-      http.request(request)
-    end
-
-    puts '3: score is received back from API'
-
-    self.update received_api: Time.now
-
-    case response.code
-    when "200"
-      if response.body.empty?
-        puts 'NOTE: no face detected'
-      else
-        parse_score response.body
-      end
-    when "401"
-      # invalid subscription key
-      puts response.message
-    when "403"
-      # out of call volume
-      puts response.message
-    when "429"
-      # Rate limit is exceeded
-      #
-    when "500"
-      # internal error with API
-      puts 'Something went wrong contacting the API'
-    else
-      # Worse case
-      puts 'Errors outside of exceptions'
-    end
-  end
-
   # !!!!! must check those fields exists, no error check yet.
-
   def server_to_api_time
     # in secs
     sent_api - on_server
@@ -98,23 +65,24 @@ class Emotum < ActiveRecord::Base
   end
 
   private
+  def send_to_api
+    self.update sent_api: Time.now
+    @emotion_client.call File.read path
+    self.update received_api: Time.now
+  end
 
   def parse_score json
     json = JSON.parse json
-    begin
-      #r = json[0]["faceRectangle"]
-      sc = json[0]["scores"]
+    #r = json[0]["faceRectangle"]
+    sc = json[0]["scores"]
+    if !sc.empty?
       emotion = Emotion.create sadness: sc["sadness"], neutral: sc["neutral"], contempt: sc["contempt"], disgust: sc["disgust"], anger: sc["anger"], surprise: sc["surprise"], fear: sc["fear"], happiness: sc["happiness"]
-      self.update emotion_id: emotion.id
-      self.update stored_score: Time.now
-
-      puts '4: scores are now stored in DB'
-
-      #faceRectangle = "Face Rectangle:\n Width: #{r["width"]}, Height: #{r["height"]}, top: #{r["top"]}, left: #{r["left"]}\n"
-      #send (faceRectangle + score)
-    rescue EmptyJsonError
-      $stderr.print "JSON response is empty: " + $!
-      raise
+    else
+      # No data on image will produce 0 response
+      emotion = Emotion.create sadness: 0, neutral: 0, contempt: 0, disgust: 0, anger: 0, surprise: 0, fear: 0, happiness: 0
     end
+
+    self.update emotion_id: emotion.id
+    self.update stored_score: Time.now
   end
 end
