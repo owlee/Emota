@@ -41,8 +41,16 @@ ActiveRecord::Schema.define(version: 20170301182837) do
     t.decimal  "happiness"
     t.decimal  "neutral"
     t.decimal  "sadness"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.decimal  "surprise_p"
+    t.decimal  "anger_p"
+    t.decimal  "contempt_p"
+    t.decimal  "disgust_p"
+    t.decimal  "fear_p"
+    t.decimal  "happiness_p"
+    t.decimal  "neutral_p"
+    t.decimal  "sadness_p"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
 end

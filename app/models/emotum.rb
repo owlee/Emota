@@ -3,15 +3,14 @@ require 'listen'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
-  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }
-
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", processed: {}}, processors: [:thumbnail, :facecrop]
+  #has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>"}, processors: [:autolevel, :autogamma, :facecrop]
   attr_accessor :emotion_client, :sns_client, :path
 
- # before_validation :download_remote_image, :if => :has_image_url?
+  # before_validation :download_remote_image, :if => :has_image_url?
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
   #validates_attachment :avatar, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
- # validates_presence_of :avatar_remote_url, :if => :has_image_url?, :message => 'is invalid or inaccessible path'
-
+  # validates_presence_of :avatar_remote_url, :if => :has_image_url?, :message => 'is invalid or inaccessible path'
   @@emotion_client = EmotionClient.new
   @@sns_client = SnsClient.new
 
@@ -21,21 +20,24 @@ class Emotum < ActiveRecord::Base
       if !modified.empty? || !added.empty?
         fileName ||= added.first
         fileName ||= modified.first
-
         #TODO: with paperclip :path column is now redundant
         emotum = Emotum.create(path: fileName, on_server: Time.now, avatar: File.new(fileName, "r"))
-
+#emotum.avatar.url(:medium)
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
         puts "Create: #{emotum.path} at: #{emotum.on_server}"
         puts '1: file is on server'
         puts '2: file is sent to API'
 
-        json = emotum.send_to_api
+        json = emotum.send_to_api emotum.avatar.path
+        update stored_score: Time.now
+        json_processed = emotum.send_to_api emotum.avatar.path(:processed)
 
         puts '3: score is received back from API'
 
+        # TODO: currently has an atomic order...it shouldnt
         emotum.parse_score json
+        emoum.update_processed_score json_processed
 
         puts '4: scores are now stored in DB'
 
@@ -66,9 +68,9 @@ class Emotum < ActiveRecord::Base
     ((!sent_api.nil?) && (!stored_score.nil?)) ? (stored_score - sent_api) : 0 # in secs
   end
 
-  def send_to_api
+  def send_to_api filepath
     self.update sent_api: Time.now
-    json = @@emotion_client.call(File.read self.path)
+    json = @@emotion_client.call(File.read filepath)
     self.update received_api: Time.now
     json
   end
@@ -87,7 +89,21 @@ class Emotum < ActiveRecord::Base
     emotion_id = emotion.id
 
     update emotion_id: emotion.id
-    update stored_score: Time.now
+
+  end
+
+  def update_processed_score json
+    if !json.empty?
+      sc = json[0]["scores"]
+      emotion.update sadness_p: sc["sadness"]
+      emotion.update neutral_p: sc["neutral"]
+      emotion.update contempt_p: sc["contempt"]
+      emotion.update disgust_p: sc["disgust"]
+      emotion.update anger_p: sc["anger"]
+      emotion.update surprise_p: sc["surprise"]
+      emotion.update fear_p: sc["fear"]
+      emotion.update happiness_p: sc["happiness"]
+    end
   end
 
   private

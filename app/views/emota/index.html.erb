@@ -31,7 +31,7 @@
                 <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
-                <td class="col-md-4"><%= image_tag emotum.avatar.url(:medium) %></td>
+                <td class="col-md-4"><%= image_tag emotum.avatar.url(:processed) %></td>
                 <td class="col-md-2"><%= emotum.avatar_file_name %></td>
                 <td class="col-md-1"><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
               </tr>

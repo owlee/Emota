@@ -12,6 +12,14 @@ class Emotion < ActiveRecord::Base
     self.neutral ||= 0.0
     self.sadness ||= 0.0
     self.surprise ||= 0.0
+    self.anger_p ||= 0.0
+    self.contempt_p ||= 0.0
+    self.disgust_p ||= 0.0
+    self.fear_p ||= 0.0
+    self.happiness_p ||= 0.0
+    self.neutral_p ||= 0.0
+    self.sadness_p ||= 0.0
+    self.surprise_p ||= 0.0
   end
 
   # Returns a sorted hash of all emotions
