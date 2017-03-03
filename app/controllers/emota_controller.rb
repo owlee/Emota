@@ -2,7 +2,7 @@ class EmotaController < ApplicationController
   before_action :set_emotum, only: [:show, :edit, :update, :destroy]
 
   def index
-    @emota = Emotum.all
+    @emota = Emotum.all.reverse
   end
 
   def createProgressBar
