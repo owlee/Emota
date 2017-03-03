@@ -2,6 +2,7 @@
 
 Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, sends info to Microsoft Emotion recognition API, receives emotion scores back, and delivers to individuals via SMS.
 
+![alt tag](https://github.com/owlee/Emota/blob/master/Emotagit.png?raw=true)
 Emota Rails features the following:
 
 * Emotion API client
