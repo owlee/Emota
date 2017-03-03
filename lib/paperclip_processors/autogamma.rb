@@ -8,7 +8,6 @@ module Paperclip
       dst.binmode
       argument = '-c luminance'
 
-      binding.pry
       `lib/paperclip_processors/autogamma #{argument} #{File.expand_path(@file.path)} #{File.expand_path(dst.path)}.jpg`
       `mv #{File.expand_path(dst.path)}.jpg #{File.expand_path(dst.path)}`
       dst

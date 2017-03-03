@@ -28,7 +28,6 @@ class Emotum < ActiveRecord::Base
         puts "Create: #{emotum.path} at: #{emotum.on_server}"
         puts '1: file is on server'
         puts '2: file is sent to API'
-        binding.pry
 
         json = emotum.send_to_api emotum.avatar.path
         emotum.update stored_score: Time.now
@@ -36,7 +35,6 @@ class Emotum < ActiveRecord::Base
 
         puts '3: score is received back from API'
 
-        binding.pry
         # TODO: currently has an atomic order...it shouldnt
         emotum.parse_score json
 
