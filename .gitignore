@@ -21,6 +21,7 @@ bin
 *.swm
 *.swn
 *.swi
+.s*
 bin_emota/*
 config/secrets.yml
 Emota Image Set/*
