@@ -6,6 +6,7 @@ module Paperclip
 
       dst = Tempfile.new([basename, dst_format])
       dst.binmode
+      binding.pry
 
       convert(':src -type Grayscale :dst',
               src: File.expand_path(@file.path),

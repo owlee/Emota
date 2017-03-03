@@ -3,7 +3,7 @@ require 'listen'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
-  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", processed: {}}, processors: [:thumbnail, :facecrop]
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", processed: {}}, processors: [:thumbnail, :autogamma]
   #has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>"}, processors: [:autolevel, :autogamma, :facecrop]
   attr_accessor :emotion_client, :sns_client, :path
 
@@ -28,16 +28,19 @@ class Emotum < ActiveRecord::Base
         puts "Create: #{emotum.path} at: #{emotum.on_server}"
         puts '1: file is on server'
         puts '2: file is sent to API'
+        binding.pry
 
         json = emotum.send_to_api emotum.avatar.path
-        update stored_score: Time.now
+        emotum.update stored_score: Time.now
         json_processed = emotum.send_to_api emotum.avatar.path(:processed)
 
         puts '3: score is received back from API'
 
+        binding.pry
         # TODO: currently has an atomic order...it shouldnt
         emotum.parse_score json
-        emoum.update_processed_score json_processed
+
+        emotum.update_processed_score json_processed
 
         puts '4: scores are now stored in DB'
 
@@ -93,6 +96,7 @@ class Emotum < ActiveRecord::Base
   end
 
   def update_processed_score json
+    json = JSON.parse json
     if !json.empty?
       sc = json[0]["scores"]
       emotion.update sadness_p: sc["sadness"]
