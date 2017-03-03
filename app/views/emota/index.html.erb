@@ -31,15 +31,25 @@
                 <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
-                <td class="col-md-4"><%= image_tag emotum.avatar.url(:medium) %></td>
+                <td class="col-md-4"><%= image_tag emotum.avatar.url(:thumb) %></td>
                 <td class="col-md-2"><%= emotum.avatar_file_name %></td>
                 <td class="col-md-1"><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
               </tr>
               <tr>
                 <td colspan="12" class="hiddenRow" style="background-color: Lavender;"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">
+                    <div class="row">
+                      <div class="col-md-2"></div>
+                      <div class="col-md-4">
+                        <center><h4>Original Photo</h4></center>
+                        <%= image_tag emotum.avatar.url(:original), size: '300x225' %>
+                      </div>
+                    <div class="col-md-1 glyphicon glyphicon-arrow-right text-success" style="font-size: 75px; padding: 110px 100px 0px 0px;"></div>
+                    <div class="col-md-4">
+                      <center><h4>Color Balanced Photo</h4></center>
+                      <%= image_tag emotum.avatar.url(:medium) %></div>
+                    </div>
                     <table class="table table-striped">
                       <thead>
-
                         <tr><th>anger</th><th>contempt</th><th>disgust</th><th>fear</th><th>happiness</th><th>neutral</th><th>sadness</th><th>surprise</th></tr>
                       </thead>
                       <tbody>
