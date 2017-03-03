@@ -54,24 +54,25 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td><%= [emotum.emotion.anger.truncate(4)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.contempt.truncate(4)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.disgust.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.fear.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.happiness.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.neutral.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.sadness.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.surprise.truncate(6)*100, '%'].join ' ' %></td>
+                          <% emo = emotum.emotion %>
+                          <td><%= (emo.anger.truncate(4)*100).to_s+'%' %></td>
+                          <td><%= (emo.contempt.truncate(4)*100).to_s+'%' %></td>
+                          <td><%= (emo.disgust.truncate(6)*100).to_s+'%' %></td>
+                          <td><%= (emo.fear.truncate(6)*100).to_s+'%' %></td>
+                          <td><%= (emo.happiness.truncate(6)*100).to_s+'%' %></td>
+                          <td><%= (emo.neutral.truncate(6)*100).to_s+'%' %></td>
+                          <td><%= (emo.sadness.truncate(6)*100).to_s+'%' %></td>
+                          <td><%= (emo.surprise.truncate(6)*100).to_s+'%' %></td>
                         </tr>
                         <tr class="bg-success">
-                          <td><%= [emotum.emotion.anger_p.truncate(4)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.contempt_p.truncate(4)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.disgust_p.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.fear_p.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.happiness_p.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.neutral_p.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.sadness_p.truncate(6)*100, '%'].join ' ' %></td>
-                          <td><%= [emotum.emotion.surprise_p.truncate(6)*100, '%'].join ' ' %></td>
+                          <td><%= [(emo.anger_p.truncate(4)*100).to_s+'%', emo.diff_anger.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.contempt_p.truncate(4)*100).to_s+'%', emo.diff_contempt.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.disgust_p.truncate(6)*100).to_s+'%', emo.diff_disgust.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.fear_p.truncate(6)*100).to_s+'%', emo.diff_fear.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.happiness_p.truncate(6)*100).to_s+'%', emo.diff_happiness.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.neutral_p.truncate(6)*100).to_s+'%', emo.diff_neutral.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.sadness_p.truncate(6)*100).to_s+'%', emo.diff_sadness.to_s+'%'].join ' ' %></td>
+                          <td><%= [(emo.surprise_p.truncate(6)*100).to_s+'%', emo.diff_surprise.to_s+'%'].join ' ' %></td>
                         </tr>
                       </tbody>
                     </table>
