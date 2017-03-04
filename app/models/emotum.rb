@@ -4,15 +4,48 @@ require 'listen'
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", processed: {}}, processors: [:thumbnail, :autogamma]
-  #has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>"}, processors: [:autolevel, :autogamma, :facecrop]
+
   attr_accessor :emotion_client, :sns_client, :path
 
-  # before_validation :download_remote_image, :if => :has_image_url?
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
-  #validates_attachment :avatar, content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
-  # validates_presence_of :avatar_remote_url, :if => :has_image_url?, :message => 'is invalid or inaccessible path'
+
   @@emotion_client = EmotionClient.new
   @@sns_client = SnsClient.new
+
+  def self.build image_file send_flag debug_flag
+    puts '1: Image is on server.' if debug_flag == 1
+    start_time = Time.now
+    emotum = Emotum.new avatar: File.new(image_file, "r")
+    end_time = Time.now
+    emotum.update image_processing_time: end_time - start_time
+    puts '2: Image is now processed.' if debug_flag == 1
+
+    # emotum.face?
+
+    puts '3: Starting roundtrip to API.' if debug_flag == 1
+    start_time = Time.now
+    json_original = emotum.send_to_api File.expand_path(emotum.avatar.path)
+    end_time = Time.now
+    emotum.update api_roundtrip_time: end_time - start_time
+
+    json_processed = emotum.send_to_api File.expand_path(emotum.avatar.path(:processed))
+
+    puts '4: Updating database/parsing scores' if debug_flag == 1
+    start_time = Time.now
+    emotum.parse_score json         # TODO: currently has an atomic order...it shouldnt
+    emotum.update_processed_score json_processed
+    end_time = Time.now
+    emotum.update score_logging_time: end_time - start_time
+
+    puts '5: Saving Emotum' if debug_flag == 1
+    emotum.save!
+
+    puts '6: Sending to subscribers' if debug_flag == 1
+    @@sns_client.send_score emotum if send_flag == 1
+
+    puts '6: Done!' if debug_flag == 1
+    emotum
+  end
 
   def self.listen
     listener = Listen.to('testPat') do |modified, added, removed|
@@ -20,31 +53,11 @@ class Emotum < ActiveRecord::Base
       if !modified.empty? || !added.empty?
         fileName ||= added.first
         fileName ||= modified.first
-        #TODO: with paperclip :path column is now redundant
-        emotum = Emotum.create(path: fileName, on_server: Time.now, avatar: File.new(fileName, "r"))
-#emotum.avatar.url(:medium)
+
+        emotum = Emotum.build fileName, 0, 1
+
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
-        puts "Create: #{emotum.path} at: #{emotum.on_server}"
-        puts '1: file is on server'
-        puts '2: file is sent to API'
-
-        json = emotum.send_to_api File.expand_path(emotum.avatar.path)
-        emotum.update stored_score: Time.now
-        json_processed = emotum.send_to_api File.expand_path(emotum.avatar.path(:processed))
-
-        puts '3: score is received back from API'
-
-        # TODO: currently has an atomic order...it shouldnt
-        emotum.parse_score json
-
-        emotum.update_processed_score json_processed
-
-        puts '4: scores are now stored in DB'
-
-        #@@sns_client.send_score emotum
-
-        puts '5: scores sent to Emota User'
       else
         raise Exception # Something went wrong
       end
@@ -53,28 +66,7 @@ class Emotum < ActiveRecord::Base
     sleep
   end
 
-  def server_to_api_time
-    ((!sent_api.nil?) && (!on_server.nil?)) ? (sent_api - on_server) : 0 # in secs
-  end
-
-  def api_to_server_time
-    ((!received_api.nil?) && (!sent_api.nil?)) ? (received_api - sent_api) : 0 # in secs
-  end
-
-  def server_to_db_time
-    ((!received_api.nil?) && (!stored_score.nil?)) ? (stored_score - received_api) : 0 # in secs
-  end
-
-  def vm_time
-    ((!sent_api.nil?) && (!stored_score.nil?)) ? (stored_score - sent_api) : 0 # in secs
-  end
-
-  def send_to_api filepath
-    self.update sent_api: Time.now
-    json = @@emotion_client.call(File.read filepath)
-    self.update received_api: Time.now
-    json
-  end
+  def send_to_api filepath; json = @@emotion_client.call(File.read filepath) end
 
   def parse_score json
     json = JSON.parse json
@@ -90,7 +82,6 @@ class Emotum < ActiveRecord::Base
     emotion_id = emotion.id
 
     update emotion_id: emotion.id
-
   end
 
   def update_processed_score json
