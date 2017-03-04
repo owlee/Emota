@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20170301182837) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "emota", force: :cascade do |t|
     t.integer  "emotion_id"
     t.string   "path"
@@ -30,7 +33,7 @@ ActiveRecord::Schema.define(version: 20170301182837) do
     t.datetime "avatar_updated_at"
   end
 
-  add_index "emota", ["emotion_id"], name: "index_emota_on_emotion_id"
+  add_index "emota", ["emotion_id"], name: "index_emota_on_emotion_id", using: :btree
 
   create_table "emotions", force: :cascade do |t|
     t.decimal  "surprise"

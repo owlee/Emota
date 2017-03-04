@@ -15,7 +15,7 @@ class Emotum < ActiveRecord::Base
   @@sns_client = SnsClient.new
 
   def self.listen
-    listener = Listen.to('bin_emota') do |modified, added, removed|
+    listener = Listen.to('testPat') do |modified, added, removed|
       #ignore those ^.jpg in the future
       if !modified.empty? || !added.empty?
         fileName ||= added.first
@@ -29,9 +29,9 @@ class Emotum < ActiveRecord::Base
         puts '1: file is on server'
         puts '2: file is sent to API'
 
-        json = emotum.send_to_api emotum.avatar.path
+        json = emotum.send_to_api File.expand_path(emotum.avatar.path)
         emotum.update stored_score: Time.now
-        json_processed = emotum.send_to_api emotum.avatar.path(:processed)
+        json_processed = emotum.send_to_api File.expand_path(emotum.avatar.path(:processed))
 
         puts '3: score is received back from API'
 
