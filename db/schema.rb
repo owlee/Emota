@@ -18,16 +18,13 @@ ActiveRecord::Schema.define(version: 20170301182837) do
 
   create_table "emota", force: :cascade do |t|
     t.integer  "emotion_id"
-    t.string   "path"
-    t.time     "on_server"
-    t.time     "preprocess"
-    t.time     "sent_api"
-    t.time     "received_api"
-    t.time     "stored_score"
-    t.boolean  "has_valid_face",      default: false
+    t.decimal  "image_processing_time"
+    t.decimal  "api_roundtrip_time"
+    t.decimal  "score_logging_time"
+    t.boolean  "has_valid_face",        default: false
     t.text     "notes"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"

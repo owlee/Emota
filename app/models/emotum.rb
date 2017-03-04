@@ -12,7 +12,7 @@ class Emotum < ActiveRecord::Base
   @@emotion_client = EmotionClient.new
   @@sns_client = SnsClient.new
 
-  def self.build image_file send_flag debug_flag
+  def self.build image_file, send_flag, debug_flag
     puts '1: Image is on server.' if debug_flag == 1
     start_time = Time.now
     emotum = Emotum.new avatar: File.new(image_file, "r")
@@ -32,7 +32,7 @@ class Emotum < ActiveRecord::Base
 
     puts '4: Updating database/parsing scores' if debug_flag == 1
     start_time = Time.now
-    emotum.parse_score json         # TODO: currently has an atomic order...it shouldnt
+    emotum.parse_score json_original         # TODO: currently has an atomic order...it shouldnt
     emotum.update_processed_score json_processed
     end_time = Time.now
     emotum.update score_logging_time: end_time - start_time
