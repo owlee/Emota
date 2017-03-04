@@ -24,7 +24,7 @@ bin
 .s*
 bin_emota/*
 config/secrets.yml
-Emota Image Set/*
+config/Emota Image Set/*
 *.pem
 db/subscribers.yml
 public/system/emota/avatars/*

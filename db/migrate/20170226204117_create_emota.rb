@@ -8,6 +8,7 @@ class CreateEmota < ActiveRecord::Migration
       t.time :sent_api
       t.time :received_api
       t.time :stored_score
+      t.boolean :has_valid_face, default: false
       t.text :notes
 
       t.timestamps null: false

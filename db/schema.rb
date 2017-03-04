@@ -24,9 +24,10 @@ ActiveRecord::Schema.define(version: 20170301182837) do
     t.time     "sent_api"
     t.time     "received_api"
     t.time     "stored_score"
+    t.boolean  "has_valid_face",      default: false
     t.text     "notes"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
