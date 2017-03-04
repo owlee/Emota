@@ -3,6 +3,7 @@
 Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, sends info to Microsoft Emotion recognition API, receives emotion scores back, and delivers to individuals via SMS.
 
 https://raw.githubusercontent.com/owlee/Emota/master/Emotagit.png
+
 Emota Rails features the following:
 
 * Emotion API client
@@ -11,7 +12,30 @@ Emota Rails features the following:
 
 * Logging of all Emotum data
 - The arrival times of different stages to the data
-- Image depiction (developing)
+- Image comparison with post-processed images
+currently, only autogamma is used for luminance boosting
+- Score comparisons between post-processed images
 - Emoji of the most dominant emotion (developing)
 - Rails page of all logged data
 - MORE TO BE ADDED
+
+# >> Running Emota Logger <<
+1. Run the application in production (or dev)
+2. Run rails runner on Emotum.listen to listen for updates on images
+3. Create symbolic link the drop folder for images is outside of the rails directory
+  ln -s #{source folder} #{destination folder}
+4. Drop photos into the folder and log away
+
+tmux: (terminal multiplexer)
+# --- Running in background ---
+  tmux
+  rails runner Emotum.listen
+  ctr+d, b # detach from session
+# --- Open up the runner again ---
+  tmux ls
+    //find the open sesion
+  tmux attach -t 0
+# --- Closing the connection ---
+  1. attach and close
+  or
+  2. tmux kill-session
