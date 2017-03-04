@@ -13,43 +13,49 @@ class EmotionClient
     @request['Ocp-Apim-Subscription-Key'] = Rails.application.secrets.MICROSOFT_EMOTION_API_KEY
   end
 
+  def self.retry response
+    case response.code
+    when "200"
+      if response.body.empty?
+        puts 'NOTE: no face detected'
+        response.body
+      else
+        response.body
+      end
+    when "401"
+      # invalid subscription key
+      puts response.message
+    when "403"
+      # out of call volume
+      puts response.message
+    when "429"
+      # Rate limit is exceeded
+      #
+    when "500"
+      # internal error with API
+      puts 'Something went wrong contacting the API'
+    else
+      # Worse case
+      puts 'Errors outside of exceptions'
+    end
+    response.code
+  end
+
   def call imageBinary
     begin
-      #binary = File.read path
-
-      @request.body = imageBinary
-
-      response = Net::HTTP.start(@uri.host, @uri.port, :use_ssl => @uri.scheme == 'https') do |http|
-        http.request(request)
-      end
-
-      case response.code
-      when "200"
-        if response.body.empty?
-          puts 'NOTE: no face detected'
-          response.body
-        else
-          response.body
+      @request.body = File.read imageBinary
+      output = nil
+      loop do
+        response = Net::HTTP.start(@uri.host, @uri.port, :use_ssl => @uri.scheme == 'https') do |http|
+          http.request(request)
         end
-      when "401"
-        # invalid subscription key
-        puts response.message
-      when "403"
-        # out of call volume
-        puts response.message
-      when "429"
-        # Rate limit is exceeded
-        #
-      when "500"
-        # internal error with API
-        puts 'Something went wrong contacting the API'
-      else
-        # Worse case
-        puts 'Errors outside of exceptions'
+        output = response.body
+        break if EmotionClient.retry(response) == "200"
+        sleep(10)
       end
-      response.body
+      output
     rescue Exception => e
-      puts "Unrecognizable param binaryImage:#{binaryImage}. Please input a valid image binary."
+      puts "#{e.to_s}"
       return nil
     end
   end

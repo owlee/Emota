@@ -89,11 +89,9 @@
                       <tbody>
                         <tr>
                           <td class="col-md-1"><%= emotum.avatar_file_name %></td>
-                          <td class="col-md-2"><%= [emotum.server_to_api_time, 's'].join ' ' %></td>
-                          <td class="col-md-2"><%= [emotum.api_to_server_time, 's'].join ' ' %></td>
-                          <td class="col-md-2"><%= [emotum.server_to_db_time, 's'].join ' ' %></td>
-                          <td class="col-md-2"><%= emotum.on_server %></td>
-                          <td class="col-md-2"><%= emotum.stored_score %></td>
+                          <td class="col-md-2"><%= [emotum.image_processing_time, 's'].join ' ' %></td>
+                          <td class="col-md-2"><%= [emotum.api_roundtrip_time, 's'].join ' ' %></td>
+                          <td class="col-md-2"><%= [emotum.score_logging_time, 's'].join ' ' %></td>
                         </tr>
                       </tbody>
                     </table>

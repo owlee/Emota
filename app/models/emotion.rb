@@ -12,6 +12,7 @@ class Emotion < ActiveRecord::Base
     self.neutral ||= 0.0
     self.sadness ||= 0.0
     self.surprise ||= 0.0
+
     self.anger_p ||= 0.0
     self.contempt_p ||= 0.0
     self.disgust_p ||= 0.0
@@ -34,7 +35,7 @@ class Emotion < ActiveRecord::Base
   # Returns a sorted hash of all emotions
   def hashify
     emotions = {anger: anger, contempt: contempt, disgust: disgust, fear: fear,
-    happiness: happiness, neutral: neutral, sadness: sadness, surprise: surprise}
+                happiness: happiness, neutral: neutral, sadness: sadness, surprise: surprise}
     emotions.sort_by {|k, v| v}.reverse.to_h
   end
 

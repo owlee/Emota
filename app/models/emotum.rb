@@ -30,6 +30,7 @@ class Emotum < ActiveRecord::Base
 
     json_processed = emotum.send_to_api File.expand_path(emotum.avatar.path(:processed))
 
+    sleep(3)
     puts '4: Updating database/parsing scores' if debug_flag == 1
     start_time = Time.now
     emotum.parse_score json_original         # TODO: currently has an atomic order...it shouldnt
@@ -66,7 +67,7 @@ class Emotum < ActiveRecord::Base
     sleep
   end
 
-  def send_to_api filepath; json = @@emotion_client.call(File.read filepath) end
+  def send_to_api filepath; json = @@emotion_client.call filepath end
 
   def parse_score json
     json = JSON.parse json
