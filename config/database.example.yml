@@ -3,8 +3,8 @@ development:
   encoding: unicode
   database: EmotaApp_development
   pool: 5
-  username: postgres
-  password: 1314Fa311e
+  username:
+  password:
 
 test:
   adapter: postgresql
@@ -12,7 +12,7 @@ test:
   database: EmotaApp_test
   pool: 5
   username: postgres
-  password: 1314Fa311e
+  password:
 
 production:
   adapter: postgresql
@@ -20,4 +20,4 @@ production:
   database: EmotaApp_production
   pool: 5
   username: postgres
-  password: 1314Fa311e
+  password:

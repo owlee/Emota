@@ -28,3 +28,4 @@ Emota Image Set/*
 *.pem
 db/subscribers.yml
 public/system/emota/avatars/*
+config/database.yml
