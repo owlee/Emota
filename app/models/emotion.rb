@@ -45,11 +45,11 @@ class Emotion < ActiveRecord::Base
   end
 
   def face_in_original?
-    (average_original_scores == 0) false : true
+    (average_original_scores == 0) ? false : true
   end
 
   def face_in_processed?
-    (average_processed_scores == 0) false : true
+    (average_processed_scores == 0) ? false : true
   end
 
   def self.color_diff_tag diff

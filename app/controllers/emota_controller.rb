@@ -5,6 +5,14 @@ class EmotaController < ApplicationController
     @emota = Emotum.all.reverse
   end
 
+  def detected_faces
+    @emota = Emotum.detected_faces_in_processed
+  end
+
+  def undetected_faces
+    @emota = Emotum.undetected_faces
+  end
+
   def createProgressBar
 #    uid = params[:uid]
 #    pusher_channel = "signup_process_#{uid}"

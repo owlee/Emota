@@ -113,6 +113,13 @@ class Emotum < ActiveRecord::Base
     faces
   end
 
+  def self.undetected_faces
+    faces = []
+    Emotum.all.each { |emotum| faces << emotum if (
+      (!emotum.emotion.face_in_processed?) && (!emotum.emotion.face_in_original?)) }
+    faces
+  end
+
   def self.original_face_count; Emotum.detected_faces_in_original.count end
 
   def self.processed_face_count; Emotum.detected_faces_in_processed.count end
