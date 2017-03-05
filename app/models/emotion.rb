@@ -69,13 +69,29 @@ class Emotion < ActiveRecord::Base
     emotions.sort_by {|k, v| v}.reverse.to_h
   end
 
+  def hashify_p
+    emotions = {anger_p: anger_p, contempt: contempt_p, disgust_p: disgust_p, fear: fear_p,
+                happiness_p: happiness_p, neutral_p: neutral_p, sadness_p: sadness_p, surprise_p: surprise_p}
+    emotions.sort_by {|k, v| v}.reverse.to_h
+  end
+
   def primary_score
     h = self.hashify
     [h.keys[0], h.values[0]]
   end
 
+  def primary_score_p
+    h = self.hashify_p
+    [h.keys[0], h.values[0]]
+  end
+
   def secondary_score
     h = self.hashify
+    [h.keys[1], h.values[1]]
+  end
+
+  def secondary_score_p
+    h = self.hashify_p
     [h.keys[1], h.values[1]]
   end
 end

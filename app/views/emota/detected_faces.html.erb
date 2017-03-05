@@ -14,6 +14,7 @@
         <h2>Emota Logger<small class="text-muted" style="padding-left: 20px;">Detected Faces Feed</small></h2>
       </div>
       <div class="panel-body">
+
         <!-- ### Navigation button ### !-->
         <div class="btn-group">
           <%= link_to 'All', emota_path, class: "btn btn-info" %>
@@ -31,6 +32,7 @@
           </tbody>
         </table>
         </div>
+
         <table class="table table-condensed" style="border-collapse:collapse;">
 
           <thead>
@@ -46,10 +48,8 @@
 
           <tbody>
             <% @emota.each do |emotum| %>
-              <tr data-toggle="collapse" data-target="#emotions-<%= emotum.id %>" class="accordion-toggle">
-
+              <tr data-toggle="collapse" data-target="#emotions-<%= emotum.id %>" class="accordion-toggle <%= 'bg-info' if !emotum.emotion.face_in_original? %>">
                 <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
-
                 <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
                 <td class="col-md-4"><%= image_tag emotum.avatar.url(:thumb) %></td>
