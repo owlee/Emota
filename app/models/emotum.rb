@@ -69,6 +69,7 @@ class Emotum < ActiveRecord::Base
 
   def send_to_api filepath; json = @@emotion_client.call filepath end
 
+
   def parse_score json
     json = JSON.parse json
     if !json.empty?
@@ -100,21 +101,37 @@ class Emotum < ActiveRecord::Base
     end
   end
 
+  def self.detected_faces_in_original
+    faces = []
+    Emotum.all.each { |emotum| faces << emotum if emotum.emotion.face_in_original? }
+    faces
+  end
+
+  def self.detected_faces_in_processed
+    faces = []
+    Emotum.all.each { |emotum| faces << emotum if emotum.emotion.face_in_processed? }
+    faces
+  end
+
+  def self.original_face_count; Emotum.detected_faces_in_original.count end
+
+  def self.processed_face_count; Emotum.detected_faces_in_processed.count end
+
   private
 
- # def has_image_url?
- #   !self.path.blank?
- # end
+  # def has_image_url?
+  #   !self.path.blank?
+  # end
 
- # def download_remote_image
- #   self.avatar = download_remote_image
- #   self.avatar_remote_url = path
- # end
+  # def download_remote_image
+  #   self.avatar = download_remote_image
+  #   self.avatar_remote_url = path
+  # end
 
- # def download_remote_image
- #   io = open(URI.parse(path))
- #   def io.original_filename; base_uri.path.split('/').last; end
- #   io.original_filename.blank? ? nil : io
- # rescue # catch url errors with validations instead of exceptions (Errno::ENOENT, OpenURI::HTTPError, etc...)
- # end
+  # def download_remote_image
+  #   io = open(URI.parse(path))
+  #   def io.original_filename; base_uri.path.split('/').last; end
+  #   io.original_filename.blank? ? nil : io
+  # rescue # catch url errors with validations instead of exceptions (Errno::ENOENT, OpenURI::HTTPError, etc...)
+  # end
 end

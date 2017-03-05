@@ -52,20 +52,6 @@ class Emotion < ActiveRecord::Base
     (average_processed_scores == 0) false : true
   end
 
-  def self.original_face_count
-    count = 0
-    Emotion.all.each do |emotion|
-      count += 1 if emotion.face_in_original?
-    end
-  end
-
-  def self.processed_face_count
-    count = 0
-    Emotion.all.each do |emotion|
-      count += 1 if emotion.face_in_processed?
-    end
-  end
-
   def self.color_diff_tag diff
     if diff > 0
       "<div class=\"text-success\">+#{diff}%</div>".html_safe
