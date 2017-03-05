@@ -13,9 +13,28 @@
       <div class="panel-heading">
         <h2>Emota Logger<small class="text-muted" style="padding-left: 20px;">All Logs Feed</small></h2>
       </div>
-      <div class="panel-body">
-        <table class="table table-condensed" style="border-collapse:collapse;">
 
+      <div class="panel-body">
+
+        <!-- ### Navigation button ### !-->
+        <div class="btn-group">
+          <%= link_to 'All', emota_path, class: "btn btn-info" %>
+          <%= link_to 'Detected', detected_faces_emota_path, class: "btn btn-info" %>
+          <%= link_to 'Undetected', undetected_faces_emota_path, class: "btn btn-info" %>
+        </div>
+
+        <!-- ### Count Tracker ### !-->
+        <table class="table table-condensed">
+          <tbody>
+            <tr><td class="col-md-3">Total Faces:</td><td><%= Emotum.count %></td></tr>
+            <tr><td class="col-md-3">Detected Faces (Before Process):</td><td><%= Emotum.original_face_count %></td></tr>
+            <tr><td>Detected Faces (After Process):</td><td><%= Emotum.processed_face_count %></td></tr>
+            <tr><td>Undetected Faces:</td><td><%= Emotum.count - Emotum.processed_face_count %></td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <table class="table table-condensed" style="border-collapse:collapse;">
           <thead>
             <tr>
               <th class="col-md-2">Dominant Score</th>
