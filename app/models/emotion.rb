@@ -23,15 +23,24 @@ class Emotion < ActiveRecord::Base
     self.surprise_p ||= 0.0
   end
 
-  def diff_anger place = 4; (100*(self.anger - self.anger_p).truncate(place)) end
-  def diff_contempt place = 4; (100*(self.contempt - self.contempt_p).truncate(place)) end
-  def diff_disgust place = 4; (100*(self.disgust - self.disgust_p).truncate(place)) end
-  def diff_fear place = 4; (100*(self.fear - self.fear_p).truncate(place)) end
-  def diff_happiness place = 4; (100*(self.happiness - self.happiness_p).truncate(place)) end
-  def diff_neutral place = 4; (100*(self.neutral - self.neutral_p).truncate(place)) end
-  def diff_sadness place = 4; (100*(self.sadness - self.sadness_p).truncate(place)) end
-  def diff_surprise place = 4; (100*(self.surprise - self.surprise_p).truncate(place)) end
+  def diff_anger place = 4; (100*(anger_p - anger).truncate(place)) end
+  def diff_contempt place = 4; (100*(contempt_p - contempt).truncate(place)) end
+  def diff_disgust place = 4; (100*(disgust_p - disgust).truncate(place)) end
+  def diff_fear place = 4; (100*(fear_p - fear).truncate(place)) end
+  def diff_happiness place = 4; (100*(happiness_p - happiness).truncate(place)) end
+  def diff_neutral place = 4; (100*(neutral_p - neutral).truncate(place)) end
+  def diff_sadness place = 4; (100*(sadness_p - sadness).truncate(place)) end
+  def diff_surprise place = 4; (100*(surprise_p - surprise).truncate(place)) end
 
+  def self.color_diff_tag diff
+    if diff > 0
+      "<div class=\"text-success\">+#{diff}%</div>".html_safe
+    elsif diff < 0
+      "<div class=\"text-danger\">#{diff}%</div>".html_safe
+    else
+      "<div class=\"text-danger\">#{diff}%</div>".html_safe
+    end
+  end
   # Returns a sorted hash of all emotions
   def hashify
     emotions = {anger: anger, contempt: contempt, disgust: disgust, fear: fear,
