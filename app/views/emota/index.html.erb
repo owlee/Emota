@@ -84,7 +84,6 @@
                           <th class="col-md-2">API ~> Server</th>
                           <th class="col-md-2">Server ~> Database</th>
                           <th class="col-md-2">Received At</th>
-                          <th class="col-md-2">Sent to User At</th></tr>
                       </thead>
                       <tbody>
                         <tr>
@@ -92,6 +91,7 @@
                           <td class="col-md-2"><%= [emotum.image_processing_time, 's'].join ' ' %></td>
                           <td class="col-md-2"><%= [emotum.api_roundtrip_time, 's'].join ' ' %></td>
                           <td class="col-md-2"><%= [emotum.score_logging_time, 's'].join ' ' %></td>
+                          <td class="col-md-2"><%= [emotum.created_at].join ' ' %></td>
                         </tr>
                       </tbody>
                     </table>

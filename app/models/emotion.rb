@@ -32,6 +32,40 @@ class Emotion < ActiveRecord::Base
   def diff_sadness place = 4; (100*(sadness_p - sadness).truncate(place)) end
   def diff_surprise place = 4; (100*(surprise_p - surprise).truncate(place)) end
 
+  def average_original_scores
+    arr = [anger, contempt, disgust, fear, happiness, neutral, sadness, surprise]
+    sum = arr.inject(:+).to_f
+    average = sum/arr.count
+  end
+
+  def average_processed_scores
+    arr = [anger_p, contempt_p, disgust_p, fear_p, happiness_p, neutral_p, sadness_p, surprise_p]
+    sum = arr.inject(:+).to_f
+    average = sum/arr.count
+  end
+
+  def face_in_original?
+    (average_original_scores == 0) false : true
+  end
+
+  def face_in_processed?
+    (average_processed_scores == 0) false : true
+  end
+
+  def self.original_face_count
+    count = 0
+    Emotion.all.each do |emotion|
+      count += 1 if emotion.face_in_original?
+    end
+  end
+
+  def self.processed_face_count
+    count = 0
+    Emotion.all.each do |emotion|
+      count += 1 if emotion.face_in_processed?
+    end
+  end
+
   def self.color_diff_tag diff
     if diff > 0
       "<div class=\"text-success\">+#{diff}%</div>".html_safe
@@ -41,6 +75,7 @@ class Emotion < ActiveRecord::Base
       "<div class=\"text-danger\">#{diff}%</div>".html_safe
     end
   end
+
   # Returns a sorted hash of all emotions
   def hashify
     emotions = {anger: anger, contempt: contempt, disgust: disgust, fear: fear,
