@@ -29,7 +29,7 @@
             <tr><td class="col-md-3">Total Faces:</td><td><%= Emotum.count %></td></tr>
             <tr><td class="col-md-3">Detected Faces (Before Process):</td><td><%= Emotum.original_face_count %></td></tr>
             <tr><td>Detected Faces (After Process):</td><td><%= Emotum.processed_face_count %></td></tr>
-            <tr><td>Undetected Faces:</td><td><%= Emotum.count - Emotum.processed_face_count %></td></tr>
+            <tr><td>Undetected Faces:</td><td><%= Emotum.undetected_faces_count %></td></tr>
           </tbody>
         </table>
         </div>

@@ -123,6 +123,8 @@ class Emotum < ActiveRecord::Base
 
   def self.processed_face_count; Emotum.detected_faces_in_processed.count end
 
+  def self.undetected_face_count; Emotum.undetected_faces.count end
+
   private
 
   # def has_image_url?

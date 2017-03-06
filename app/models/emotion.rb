@@ -42,6 +42,7 @@ class Emotion < ActiveRecord::Base
     arr = [anger_p, contempt_p, disgust_p, fear_p, happiness_p, neutral_p, sadness_p, surprise_p]
     sum = arr.inject(:+).to_f
     average = sum/arr.count
+    binding.pry
   end
 
   def face_in_original?
