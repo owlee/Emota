@@ -51,7 +51,7 @@ class EmotionClient
         end
         output = response.body
         break if EmotionClient.retry(response) == "200"
-        sleep(10)
+        sleep(3)
       end
       output
     rescue Exception => e
