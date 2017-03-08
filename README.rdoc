@@ -1,4 +1,4 @@
-== <div style="text-align:center">https://raw.githubusercontent.com/owlee/Emota/master/logo.png</div>
+== <p align="center">https://raw.githubusercontent.com/owlee/Emota/master/logo.png</div></p>
 
 Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, preprocesses photos with autogamma (imagemagick), sends info to Microsoft Emotion recognition API, receives/logs emotion scores back, and delivers to individuals via SMS or notifications to an Apple smart watch.
 
