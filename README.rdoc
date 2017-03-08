@@ -27,6 +27,12 @@ currently, only autogamma is used for luminance boosting
 - (TBD) Mood associated with conversations
 - (TBD) Deviations from conversation mood
 
+- (TBD) Tests!! Rspec!! (Wanted to push out functionality for review first)
+- (TBD) Capistrano
+- (TBD) Pusher API for dynamic feed
+- (TBD) Algorithm/Facial detection (OpenCV) to detect faces before sending to API (reduce latency/ not boggle DB)
+- (TBD) Code cleanup
+
 # >> Running Emota Logger <<
 1. Run the application in production (or dev)
 2. Run rails runner on Emotum.listen to listen for updates on images (Maybe as task later) (TBD)
