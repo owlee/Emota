@@ -13,6 +13,8 @@ class Emotum < ActiveRecord::Base
   @@count = nil
 
   def self.build image_file, send_flag, debug_flag
+    convo = Conversation.create start_time: Time.now, end_time: Time.now if Emotum.ended_conversation?
+
     puts '1: Image is on server.' if debug_flag == 1
     start_time = Time.now
     emotum = Emotum.new avatar: File.new(image_file, "r")
@@ -51,6 +53,10 @@ class Emotum < ActiveRecord::Base
     end
 
     puts '6: Done!' if debug_flag == 1
+    Conversation.last.update end_date: Time.now
+    convo.end_date = Time.now
+    convo.
+    convo.save!
     emotum
   end
 
@@ -75,6 +81,10 @@ class Emotum < ActiveRecord::Base
     end
     listener.start # not blocking
     sleep
+  end
+
+  def self.ended_conversation? wait_time = 1 # minutes
+    (Time.now - Emotum.last.created_at)/wait_time > wait_time
   end
 
   def send_to_api filepath; json = @@emotion_client.call filepath end

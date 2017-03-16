@@ -6,6 +6,8 @@ class CreateConversations < ActiveRecord::Migration
       t.decimal :duration
       t.text :mood
       t.text :deviations
+      t.datetime :start_date
+      t.datetime :end_date
 
       t.timestamps null: false
     end
