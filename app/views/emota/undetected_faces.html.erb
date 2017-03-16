@@ -28,8 +28,8 @@
           <tbody>
             <tr><td class="col-md-3">Total Faces:</td><td><%= Emotum.count %></td></tr>
             <tr><td class="col-md-3">Detected Faces (Before Process):</td><td><%= Emotum.original_face_count %></td></tr>
-            <tr><td>Detected Faces (After Process):</td><td><%= Emotum.processed_face_count %></td></tr>
-            <tr><td>Undetected Faces:</td><td><%= Emotum.count - Emotum.processed_face_count %></td></tr>
+            <tr><td>Detected Faces (After Process):</td><td><%= Emotum.processed_face_count+1 %></td></tr>
+            <tr><td>Undetected Faces:</td><td><%= Emotum.count - Emotum.processed_face_count-1 %></td></tr>
           </tbody>
         </table>
         </div>
@@ -55,7 +55,9 @@
                 <td class="col-md-1"><%=  %></td>
                 <td class="col-md-4"><%= image_tag emotum.avatar.url(:thumb) %></td>
                 <td class="col-md-2"><%= emotum.avatar_file_name %></td>
-                <td class="col-md-1"><%= link_to 'Show', emotum %><%= link_to 'Destroy', emotum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td class="col-md-1">
+		<%= button_tag "", method: :delete, data: { confirm: 'Are you sure you want to delete this log?' }, class: "btn btn-default glyphicon glyphicon-trash" %>
+		</td>
               </tr>
               <tr>
                 <td colspan="12" class="hiddenRow" style="background-color: Lavender;"><div class="accordian-body collapse" id="emotions-<%= emotum.id %>">

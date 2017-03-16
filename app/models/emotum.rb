@@ -11,6 +11,7 @@ class Emotum < ActiveRecord::Base
 
   @@emotion_client = EmotionClient.new
   @@sns_client = SnsClient.new
+  @@count = nil
 
   def self.build image_file, send_flag, debug_flag
     puts '1: Image is on server.' if debug_flag == 1
@@ -40,8 +41,19 @@ class Emotum < ActiveRecord::Base
     puts '5: Saving Emotum' if debug_flag == 1
     emotum.save!
 
-    puts '6: Sending to subscribers' if debug_flag == 1
-    @@sns_client.send_score emotum if send_flag == 1
+    if @@count.nil?
+      puts '6: Sending to subscribers' if debug_flag == 1
+      @@sns_client.send_score emotum if send_flag == 1
+      @@count = 0
+
+    elsif @@count >= 10
+      puts '6: Sending to subscribers' if debug_flag == 1
+      @@sns_client.send_score emotum if send_flag == 1
+      @@count = 0
+    else
+
+      @@count += 1
+    end
 
     puts '6: Done!' if debug_flag == 1
     emotum
@@ -49,18 +61,22 @@ class Emotum < ActiveRecord::Base
 
   def self.listen
     listener = Listen.to('testPat') do |modified, added, removed|
+    begin
       #ignore those ^.jpg in the future
       if !modified.empty? || !added.empty?
         fileName ||= added.first
         fileName ||= modified.first
 
-        emotum = Emotum.build fileName, 0, 1
+        emotum = Emotum.build fileName, 1, 1
 
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
       else
         raise Exception # Something went wrong
       end
+    rescue
+      retry
+    end
     end
     listener.start # not blocking
     sleep

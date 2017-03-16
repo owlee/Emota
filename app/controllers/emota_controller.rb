@@ -6,11 +6,11 @@ class EmotaController < ApplicationController
   end
 
   def detected_faces
-    @emota = Emotum.detected_faces_in_processed
+    @emota = Emotum.detected_faces_in_processed.reverse
   end
 
   def undetected_faces
-    @emota = Emotum.undetected_faces
+    @emota = Emotum.undetected_faces.reverse
   end
 
   def createProgressBar
