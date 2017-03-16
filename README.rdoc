@@ -1,27 +1,41 @@
-== Emota Project
+== https://raw.githubusercontent.com/owlee/Emota/master/logo.png
 
-Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, sends info to Microsoft Emotion recognition API, receives emotion scores back, and delivers to individuals via SMS.
+Emota is a tool to aid indviduals, with autism spectrum disorder, in conversations. The Emota hardware includes a camera/PCB/rasp pi that takes photos of conversation partner. Emota Rails listens for photos on the server, preprocesses photos with autogamma (imagemagick), sends info to Microsoft Emotion recognition API, receives/logs emotion scores back, and delivers to individuals via SMS or notifications to an Apple smart watch.
 
+http://ec2-54-218-83-121.us-west-2.compute.amazonaws.com/emota/detected_faces
 https://raw.githubusercontent.com/owlee/Emota/master/Emotagit.png
+
+https://raw.githubusercontent.com/owlee/Emota/master/block_diagram.png
 
 Emota Rails features the following:
 
-* Emotion API client
+APIs
+* Microsoft Emotion API client
+* Amason SNS client
+* (TBD) APNs -- Apple Notifications 
 
-* SNS client
-
+Application
 * Logging of all Emotum data
 - The arrival times of different stages to the data
-- Image comparison with post-processed images
+- Image comparison with processed images (imagemagick)
 currently, only autogamma is used for luminance boosting
 - Score comparisons between post-processed images
-- Emoji of the most dominant emotion (developing)
-- Rails page of all logged data
-- MORE TO BE ADDED
+- Rails page of all logged data: detected faces, and all pictures
+
+- (TBD) Emoji of the most dominant emotion
+- (TBD) Conversation separation or picture specific scenarios
+- (TBD) Mood associated with conversations
+- (TBD) Deviations from conversation mood
+
+- (TBD) Tests!! Rspec!! (Wanted to push out functionality for review first)
+- (TBD) Capistrano
+- (TBD) Pusher API for dynamic feed
+- (TBD) Algorithm/Facial detection (OpenCV) to detect faces before sending to API (reduce latency/ not boggle DB)
+- (TBD) Code cleanup
 
 # >> Running Emota Logger <<
 1. Run the application in production (or dev)
-2. Run rails runner on Emotum.listen to listen for updates on images
+2. Run rails runner on Emotum.listen to listen for updates on images (Maybe as task later) (TBD)
 3. Create symbolic link the drop folder for images is outside of the rails directory
   ln -s #{source folder} #{destination folder}
 4. Drop photos into the folder and log away
