@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301182837) do
+ActiveRecord::Schema.define(version: 20170316152514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "conversations", force: :cascade do |t|
+    t.string   "name"
+    t.decimal  "duration"
+    t.text     "mood"
+    t.text     "deviations"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "emota", force: :cascade do |t|
     t.integer  "emotion_id"
@@ -50,8 +59,10 @@ ActiveRecord::Schema.define(version: 20170301182837) do
     t.decimal  "happiness_p"
     t.decimal  "neutral_p"
     t.decimal  "sadness_p"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.boolean  "original_face"
+    t.boolean  "processed_face"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end

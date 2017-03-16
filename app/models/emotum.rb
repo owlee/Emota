@@ -1,5 +1,4 @@
 require 'listen'
-#require 'open-uri'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
@@ -20,8 +19,6 @@ class Emotum < ActiveRecord::Base
     end_time = Time.now
     emotum.update image_processing_time: end_time - start_time
     puts '2: Image is now processed.' if debug_flag == 1
-
-    # emotum.face?
 
     puts '3: Starting roundtrip to API.' if debug_flag == 1
     start_time = Time.now
@@ -45,13 +42,11 @@ class Emotum < ActiveRecord::Base
       puts '6: Sending to subscribers' if debug_flag == 1
       @@sns_client.send_score emotum if send_flag == 1
       @@count = 0
-
     elsif @@count >= 10
       puts '6: Sending to subscribers' if debug_flag == 1
       @@sns_client.send_score emotum if send_flag == 1
       @@count = 0
     else
-
       @@count += 1
     end
 
@@ -67,7 +62,7 @@ class Emotum < ActiveRecord::Base
         fileName ||= added.first
         fileName ||= modified.first
 
-        emotum = Emotum.build fileName, 1, 1
+        emotum = Emotum.build fileName, 0, 0
 
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
@@ -83,7 +78,6 @@ class Emotum < ActiveRecord::Base
   end
 
   def send_to_api filepath; json = @@emotion_client.call filepath end
-
 
   def parse_score json
     json = JSON.parse json
