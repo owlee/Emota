@@ -13,7 +13,7 @@ class Emotum < ActiveRecord::Base
   @@count = nil
 
   def self.build image_file, send_flag, debug_flag
-    convo = Conversation.create start_time: Time.now, end_time: Time.now if Emotum.ended_conversation?
+    convo = Emotum.ended_conversation? ? (Conversation.create start_date: Time.now, end_date: Time.now) : Conversation.last
 
     puts '1: Image is on server.' if debug_flag == 1
     start_time = Time.now
@@ -40,22 +40,23 @@ class Emotum < ActiveRecord::Base
     puts '5: Saving Emotum' if debug_flag == 1
     emotum.save!
 
-    if @@count.nil?
-      puts '6: Sending to subscribers' if debug_flag == 1
-      @@sns_client.send_score emotum if send_flag == 1
-      @@count = 0
-    elsif @@count >= 10
-      puts '6: Sending to subscribers' if debug_flag == 1
-      @@sns_client.send_score emotum if send_flag == 1
-      @@count = 0
-    else
-      @@count += 1
+    if send_flag == 1
+      if @@count.nil?
+        puts '6: Sending to subscribers' if debug_flag == 1
+        @@sns_client.send_score emotum
+        @@count = 0
+      elsif @@count >= 10
+        puts '6: Sending to subscribers' if debug_flag == 1
+        @@sns_client.send_score emotum
+        @@count = 0
+      else
+        @@count += 1
+      end
     end
 
     puts '6: Done!' if debug_flag == 1
-    Conversation.last.update end_date: Time.now
+    convo.update end_date: Time.now
     convo.end_date = Time.now
-    convo.
     convo.save!
     emotum
   end
@@ -84,7 +85,11 @@ class Emotum < ActiveRecord::Base
   end
 
   def self.ended_conversation? wait_time = 1 # minutes
-    (Time.now - Emotum.last.created_at)/wait_time > wait_time
+    if Emotum.count == 0
+      true
+    else
+      (Time.now - Emotum.last.created_at)/60 > wait_time
+    end
   end
 
   def send_to_api filepath; json = @@emotion_client.call filepath end

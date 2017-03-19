@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20170316152514) do
     t.decimal  "duration"
     t.text     "mood"
     t.text     "deviations"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,10 +61,8 @@ ActiveRecord::Schema.define(version: 20170316152514) do
     t.decimal  "happiness_p"
     t.decimal  "neutral_p"
     t.decimal  "sadness_p"
-    t.boolean  "original_face"
-    t.boolean  "processed_face"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
 end

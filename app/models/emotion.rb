@@ -3,8 +3,8 @@ class Emotion < ActiveRecord::Base
 
   after_initialize :update_defaults
 
-  validates :anger, :contempt, :disgustm, :fear, :happiness, :neutral, :sad, :surprise, numericality: { message: "%{value} is not numerical"}
-  validates :anger_p, :contempt_p, :disgustm_p, :fear_p, :happiness_p, :neutral_p, :sad_p, :surprise_p, numericality: { message: "%{value} is not numerical"}
+  validates :anger, :contempt, :disgust, :fear, :happiness, :neutral, :sadness, :surprise, numericality: { message: "%{value} is not numerical"}
+  validates :anger_p, :contempt_p, :disgust_p, :fear_p, :happiness_p, :neutral_p, :sadness_p, :surprise_p, numericality: { message: "%{value} is not numerical"}
 
   def update_defaults
     self.anger ||= 0.0
