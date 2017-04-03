@@ -53,3 +53,31 @@ tmux: (terminal multiplexer)
   1. attach and close
   or
   2. tmux kill-session
+
+# >> RESTful functionality <<
+NOTE: could be more generic but these features were requested
+
+/emota/last_n_faces.json?num=params
+  no params -> defaults to 0 or 404 no faces found
+  under limit -> 404
+  within limit -> returns n valid faces
+  over limit   -> returns all valid faces
+
+/emota/latest.json
+  no database entry    -> 404
+  valid database entry -> latest valid face
+
+/conversations.json?date=params
+  params format %d-%m-%y
+  valid date
+	-> all conversations of that date
+	-> 404 no conversations found on that date
+  invalid date
+	-> 404 conversations not found on that unknown date
+  empty params
+	-> defaults to 01-01-2001 or 404 no convo found on that date
+
+/conversations/params.json
+  params format is a decimal
+  valid param      -> returns all emotions of that entry
+  invalid params -> 404: record is not found
