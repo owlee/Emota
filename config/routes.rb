@@ -3,10 +3,12 @@ Rails.application.routes.draw do
     collection do
       get 'detected_faces'
       get 'undetected_faces'
+      get 'last_n_faces'
+      get 'latest'
     end
   end
 
-  resources :conversations, only: [:index]
+  resources :conversations, only: [:index, :show]
 
   resources :homes, only: [:index]
 

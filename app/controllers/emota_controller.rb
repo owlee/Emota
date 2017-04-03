@@ -9,6 +9,67 @@ class EmotaController < ApplicationController
     @emota = Emotum.detected_faces_in_processed.reverse
   end
 
+  def last_n_faces
+    respond_to do |format|
+      format.json do
+        num = params['num'].to_i || 0
+        @emota = Emotum.last_n_faces num
+        hash, h = Hash.new, Hash.new
+
+        unless @emota.empty?
+          @emota.each do |emotum|
+            mood = emotum.emotion
+            emo = { emotion_id: mood.id,
+                    anger:      mood.anger_p,
+                    surprised:  mood.surprise_p,
+                    contempt:   mood.contempt_p,
+                    disgust:    mood.disgust_p,
+                    fear:       mood.fear_p,
+                    happiness:  mood.happiness_p,
+                    neutral:    mood.neutral_p,
+                    sadness:    mood.sadness_p,
+                    created_at: mood.created_at }
+            hash[emotum.id] = emo
+          end
+        else
+          hash[404] = "Number of faces: #{num} is invalid"
+        end
+        h['emota'] = hash
+        h['count'] = @emota.count
+        render json: h
+      end
+    end
+  end
+
+  def latest
+    respond_to do |format|
+      format.json do
+        hash, h = Hash.new, Hash.new
+
+        unless Emotum.count == 0
+          @emota = Emotum.latest
+          mood = @emota.emotion
+
+          emo = { emotion_id: mood.id,
+                  anger:      mood.anger_p,
+                  surprised:  mood.surprise_p,
+                  contempt:   mood.contempt_p,
+                  disgust:    mood.disgust_p,
+                  fear:       mood.fear_p,
+                  happiness:  mood.happiness_p,
+                  neutral:    mood.neutral_p,
+                  sadness:    mood.sadness_p,
+                  created_at: mood.created_at }
+        else
+          hash[404] = "There are no emotions available on server"
+        end
+        hash[@emota.id] = emo
+        h['latest'] = hash
+        render json: h
+      end
+    end
+  end
+
   def undetected_faces
     @emota = Emotum.undetected_faces.reverse
   end

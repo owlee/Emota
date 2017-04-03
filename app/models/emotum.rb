@@ -137,6 +137,41 @@ class Emotum < ActiveRecord::Base
     faces
   end
 
+  def self.last_n_faces num
+    num = Emotum.count if Emotum.count < num
+
+    count = 0
+    arr = []
+    last_id = Emotum.last.id
+    until(count == num)
+      last_emotion = Emotum.where(id: last_id).first
+
+      break if last_emotion.nil? || (last_id < 0)
+
+      if last_emotion.emotion.face_in_processed?
+        arr << last_emotion
+        count += 1
+      end
+      last_id -= 1
+    end
+    arr
+  end
+
+  def self.latest
+    latest_id = Emotum.last.id
+    latest_emotion = Emotum.find(latest_id)
+    if latest_emotion.emotion.face_in_processed?
+      return latest_emotion
+    else
+      until(latest_emotion.emotion.face_in_processed?)
+        break if latest_id <= 0
+        latest_id -= 1
+        latest_emotion = Emotum.find(latest_id)
+      end
+    end
+    latest_emotion
+  end
+
   def self.undetected_faces
     faces = []
     Emotum.all.each { |emotum| faces << emotum if (
