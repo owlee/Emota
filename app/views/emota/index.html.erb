@@ -52,7 +52,7 @@
                 <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
-                <td class="col-md-4"><%= image_tag emotum.avatar.url(:thumb) %></td>
+                <td class="col-md-4"><%= image_tag emotum.avatar.path(:thumb) %></td>
                 <td class="col-md-2"><%= emotum.avatar_file_name %></td>
                 <td class="col-md-1">
                   <%= button_tag "", method: :delete, data: { confirm: 'Are you sure you want to delete this log?' }, class: "btn btn-default glyphicon glyphicon-trash" %>
@@ -64,12 +64,12 @@
                       <div class="col-md-2"></div>
                       <div class="col-md-4">
                         <center><h4>Original Photo</h4></center>
-                        <%= image_tag emotum.avatar.url(:original), size: '300x225' %>
+                        <%= image_tag emotum.avatar.path(:original), size: '300x225' %>
                       </div>
                     <div class="col-md-1 glyphicon glyphicon-arrow-right text-success" style="font-size: 75px; padding: 110px 100px 0px 0px;"></div>
                     <div class="col-md-4">
                       <center><h4>Color Balanced Photo</h4></center>
-                      <%= image_tag emotum.avatar.url(:medium) %></div>
+                      <%= image_tag emotum.avatar.path(:medium) %></div>
                     </div>
                     <table class="table table-striped">
                       <thead>

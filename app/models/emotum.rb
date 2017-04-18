@@ -2,7 +2,10 @@ require 'listen'
 
 class Emotum < ActiveRecord::Base
   belongs_to :emotion
-  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", processed: {}}, processors: [:thumbnail, :autogamma]
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", 
+			     processed: {}},
+			     processors: [:thumbnail, :autogamma],
+			     path: ":rails_root/public/emota/avatars/:style/:basename.:extension" 
 
   attr_accessor :emotion_client, :sns_client, :path
 
@@ -12,29 +15,32 @@ class Emotum < ActiveRecord::Base
   @@sns_client = SnsClient.new
   @@count = nil
 
-  def self.build image_file, send_flag, debug_flag
-    convo = Emotum.ended_conversation? ? (Conversation.create start_date: Time.now, end_date: Time.now) : Conversation.last
+  def self.build image_file, send_flag, debug_flag, remove_flag = 0
+    time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
+    convo = Emotum.ended_conversation? ? (Conversation.create start_date: time, end_date: time) : Conversation.last
 
     puts '1: Image is on server.' if debug_flag == 1
-    start_time = Time.now
-    emotum = Emotum.new avatar: File.new(image_file, "r")
-    end_time = Time.now
+    start_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
+    emotum = Emotum.new
+    emotum.avatar = File.new(image_file, "r")
+    emotum.save!
+    end_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     emotum.update image_processing_time: end_time - start_time
     puts '2: Image is now processed.' if debug_flag == 1
 
     puts '3: Starting roundtrip to API.' if debug_flag == 1
-    start_time = Time.now
+    start_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     json_original = emotum.send_to_api File.expand_path(emotum.avatar.path)
-    end_time = Time.now
+    end_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     emotum.update api_roundtrip_time: end_time - start_time
 
     json_processed = emotum.send_to_api File.expand_path(emotum.avatar.path(:processed))
 
     puts '4: Updating database/parsing scores' if debug_flag == 1
-    start_time = Time.now
+    start_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     emotum.parse_score json_original         # TODO: currently has an atomic order...it shouldnt
     emotum.update_processed_score json_processed
-    end_time = Time.now
+    end_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     emotum.update score_logging_time: end_time - start_time
 
     puts '5: Saving Emotum' if debug_flag == 1
@@ -55,9 +61,10 @@ class Emotum < ActiveRecord::Base
     end
 
     puts '6: Done!' if debug_flag == 1
-    convo.update end_date: Time.now
-    convo.end_date = Time.now
+    convo.update end_date: DateTime.now.in_time_zone("Eastern Time (US & Canada)")
+    convo.end_date = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     convo.save!
+    `rm #{image_file}` if remove_flag == 1
     emotum
   end
 
@@ -69,7 +76,7 @@ class Emotum < ActiveRecord::Base
         fileName ||= added.first
         fileName ||= modified.first
 
-        emotum = Emotum.build fileName, 0, 0
+        emotum = Emotum.build fileName, 0, 0, 1
 
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
@@ -88,7 +95,7 @@ class Emotum < ActiveRecord::Base
     if Emotum.count == 0
       true
     else
-      (Time.now - Emotum.last.created_at)/60 > wait_time
+      (DateTime.now.in_time_zone("Eastern Time (US & Canada)") - Emotum.last.created_at)/60 > wait_time
     end
   end
 

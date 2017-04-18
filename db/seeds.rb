@@ -16,7 +16,7 @@ Dir.glob((dir + '*.jpg').to_s) do |image_path|
     sleep(1.minute)
     puts '### Waking up to new conversation ###'
   end
-  Emotum.build image_path, 0, 1
+  Emotum.build image_path, 0, 1, 0
   count += 1
 end
 

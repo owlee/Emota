@@ -22,6 +22,8 @@ class EmotionClient
       else
         response.body
       end
+    when "400"
+      puts '400 error incorrect read'
     when "401"
       # invalid subscription key
       puts response.message
