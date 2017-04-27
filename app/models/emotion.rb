@@ -38,21 +38,19 @@ class Emotion < ActiveRecord::Base
   def average_original_scores
     arr = [anger, contempt, disgust, fear, happiness, neutral, sadness, surprise]
     sum = arr.inject(:+).to_f
-    average = sum/arr.count
   end
 
   def average_processed_scores
     arr = [anger_p, contempt_p, disgust_p, fear_p, happiness_p, neutral_p, sadness_p, surprise_p]
     sum = arr.inject(:+).to_f
-    average = sum/arr.count
   end
 
   def face_in_original?
-    (average_original_scores == 0) ? false : true
+    (average_original_scores > 0)
   end
 
   def face_in_processed?
-    (average_processed_scores == 0) ? false : true
+    (average_processed_scores > 0)
   end
 
   def self.color_diff_tag diff

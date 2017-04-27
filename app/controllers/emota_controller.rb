@@ -2,11 +2,15 @@ class EmotaController < ApplicationController
   before_action :set_emotum, only: [:show, :edit, :update, :destroy]
 
   def index
-    @emota = Emotum.all.reverse
+    @emota = Emotum.all.order(created_at: :desc).reject { |emo| emo.emotion.nil? } 
   end
 
   def detected_faces
-    @emota = Emotum.detected_faces_in_processed.reverse
+    @emota = Emotum.detected_faces
+  end
+
+  def undetected_faces
+    @emota = Emotum.undetected_faces
   end
 
   def last_n_faces
@@ -70,9 +74,6 @@ class EmotaController < ApplicationController
     end
   end
 
-  def undetected_faces
-    @emota = Emotum.undetected_faces.reverse
-  end
 
   def createProgressBar
 #    uid = params[:uid]

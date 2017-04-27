@@ -5,7 +5,8 @@ class Emotum < ActiveRecord::Base
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>", 
 			     processed: {}},
 			     processors: [:thumbnail, :autogamma],
-			     path: ":rails_root/public/emota/avatars/:style/:basename.:extension" 
+			     path: ":rails_root/public/images/avatars/:style/:basename.:extension",
+			     url: "avatars/:style/:basename.:extension"
 
   attr_accessor :emotion_client, :sns_client, :path
 
@@ -24,6 +25,7 @@ class Emotum < ActiveRecord::Base
     emotum = Emotum.new
     emotum.avatar = File.new(image_file, "r")
     emotum.save!
+   # File.delete(image_file)
     end_time = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     emotum.update image_processing_time: end_time - start_time
     puts '2: Image is now processed.' if debug_flag == 1
@@ -64,7 +66,7 @@ class Emotum < ActiveRecord::Base
     convo.update end_date: DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     convo.end_date = DateTime.now.in_time_zone("Eastern Time (US & Canada)")
     convo.save!
-    `rm #{image_file}` if remove_flag == 1
+    # `rm #{image_file}` if remove_flag == 1
     emotum
   end
 
@@ -72,11 +74,11 @@ class Emotum < ActiveRecord::Base
     listener = Listen.to('testPat') do |modified, added, removed|
     begin
       #ignore those ^.jpg in the future
-      if !modified.empty? || !added.empty?
+      if added.empty? || modified.empty?
         fileName ||= added.first
-        fileName ||= modified.first
+	fileName ||= modified.first
 
-        emotum = Emotum.build fileName, 0, 0, 1
+        emotum = Emotum.build fileName, 0, 1, 1
 
         puts 'Created an entry.................................'
         puts "Emotum count: #{Emotum.count}"
@@ -91,7 +93,7 @@ class Emotum < ActiveRecord::Base
     sleep
   end
 
-  def self.ended_conversation? wait_time = 1 # minutes
+  def self.ended_conversation? wait_time = 3 # minutes
     if Emotum.count == 0
       true
     else
@@ -133,14 +135,32 @@ class Emotum < ActiveRecord::Base
   end
 
   def self.detected_faces_in_original
-    faces = []
-    Emotum.all.each { |emotum| faces << emotum if emotum.emotion.face_in_original? }
-    faces
+    #faces = []
+    #Emotum.all.order(created_at: :desc).reject { |emo| emo.nil? }
+    Emotum.all.order(created_at: :desc).reject { |emo| emo.emotion.nil? }.reject { |emo| !emo.emotion.face_in_original? }
+    #faces
   end
 
   def self.detected_faces_in_processed
+    #faces = []
+    Emotum.all.order(created_at: :desc).reject { |emo| emo.emotion.nil? }.reject { |emo| !emo.emotion.face_in_processed? }
+   # Emotum.all.each { |emotum| faces << emotum if emotum.emotion.face_in_processed? }
+   # faces
+  end
+
+  def self.detected_faces
+    Emotum.all.order(created_at: :desc).reject { |emo| emo.emotion.nil? }.select { |emo| emo.emotion.face_in_original? || emo.emotion.face_in_processed? }
+  end
+
+  def self.undetected_faces
     faces = []
-    Emotum.all.each { |emotum| faces << emotum if emotum.emotion.face_in_processed? }
+    Emotum.all.each do |emotum| 
+      if emotum.emotion.nil?
+	faces << emotum
+      elsif ((!emotum.emotion.face_in_processed?) && (!emotum.emotion.face_in_original?)) 
+        faces << emotum 
+      end
+    end
     faces
   end
 
@@ -179,12 +199,7 @@ class Emotum < ActiveRecord::Base
     latest_emotion
   end
 
-  def self.undetected_faces
-    faces = []
-    Emotum.all.each { |emotum| faces << emotum if (
-      (!emotum.emotion.face_in_processed?) && (!emotum.emotion.face_in_original?)) }
-    faces
-  end
+
 
   def self.original_face_count; Emotum.detected_faces_in_original.count end
 

@@ -49,8 +49,8 @@
           <tbody>
             <% @emota.each do |emotum| %>
               <tr data-toggle="collapse" data-target="#emotions-<%= emotum.id %>" class="accordion-toggle <%= 'bg-info' if !emotum.emotion.face_in_original? %>">
-                <td class="col-md-2"><%= [emotum.emotion.primary_score[0], emotum.emotion.primary_score[1].truncate(2)*100, '%'].join ' ' %></td>
-                <td class="col-md-2"><%= [emotum.emotion.secondary_score[0], emotum.emotion.secondary_score[1].truncate(2)*100, '%'].join ' ' %></td>
+                <td class="col-md-2"><%= [emotum.emotion.primary_score_p[0], emotum.emotion.primary_score_p[1].truncate(2)*100, '%'].join ' ' %></td>
+                <td class="col-md-2"><%= [emotum.emotion.secondary_score_p[0], emotum.emotion.secondary_score_p[1].truncate(2)*100, '%'].join ' ' %></td>
                 <td class="col-md-1"><%=  %></td>
                 <td class="col-md-4"><%= image_tag emotum.avatar.url(:thumb) %></td>
                 <td class="col-md-2"><%= emotum.avatar_file_name %></td>
